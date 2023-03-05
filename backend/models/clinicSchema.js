@@ -3,8 +3,8 @@
 const mongoose = require("mongoose");
 
 const clinicSchema = new mongoose.Schema({
-sections:{type:String,required:true,},
-doctor: { type: mongoose.Schema.Types.ObjectId, ref: "doctor" },
+sectionname:{type:String,required:true,},
+doctor: [{ type: mongoose.Schema.Types.ObjectId, ref: "doctor" }],
 
 });
 
