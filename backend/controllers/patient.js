@@ -72,10 +72,10 @@ const login = (req, res) => {
             message: `The email doesn't exist or The password you’ve entered is incorrect`,
           });
         }
+        console.log("token result /n"+result)
         const payload = {
           userId: result._id,
-          patientname: result.firstName,
-
+         
           role: result.role,
         };
 
@@ -102,8 +102,36 @@ const login = (req, res) => {
     });
 };
 
-
+const updateprofile=(req,res)=>{
+  const id = req.params.id;
+  const filter = req.body;
+  Object.keys(filter).forEach((key) => {
+    filter[key] == "" && delete filter[key];
+  });
+  patientModel
+    .findByIdAndUpdate({ _id: id }, req.body, { new: true })
+    .then((newProfile) => {
+      if (!newProfile) {
+        return res.status(404).json({
+          success: false,
+          message: `This patient with id => ${id} not found`,
+        });
+      }
+      res.status(202).json({
+        success: true,
+        message: `this profile is updated`,
+        newProfile: newProfile,
+      });
+    })
+    .catch((err) => {
+      res.status(500).json({
+        success: false,
+        message: `Server Error`,
+        err: err.message,
+      });
+    });
+}
 module.exports = {
-  register,login
+  register,login,updateprofile
   
 };

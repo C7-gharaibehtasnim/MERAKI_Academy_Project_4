@@ -1,12 +1,13 @@
 const adminModal = require("../models/adminSchema");
-const bcrypt = require("bcryptjs");
+
 const jwt = require("jsonwebtoken");
+const bcrypt = require("bcryptjs");
 const register = (req, res) => {
     const {
-     
+        name,email,password,role
     } = req.body;
     const admin = new adminModal({
-     
+        name,email,password,role
     });
   
     admin
@@ -62,12 +63,12 @@ const register = (req, res) => {
             }
             const payload = {
               userId: result._id,
-              doctorname: result.firstName,
+             
               role: result.role,
             };
     
             const options = {
-              expiresIn: "60m",
+              expiresIn: "24h",
             };
             console.log( process.env.SECRET)
             const token = jwt.sign(payload, process.env.SECRET, options);
