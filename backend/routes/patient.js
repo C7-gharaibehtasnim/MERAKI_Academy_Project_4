@@ -10,7 +10,9 @@ patientRouter.post("/register", register);
 patientRouter.post("/login", login);
 
 patientRouter.post("/appointment", authentication,authorization("CANCEL_APPOINTMENT"),getAppointmentBypatientID);
-patientRouter.get("/update/:id", authentication,authorization("CANCEL_APPOINTMENT"), updateprofile);
+patientRouter.put("/update/:id", authentication,authorization("CANCEL_APPOINTMENT"), updateprofile);
 
 
 module.exports = patientRouter;
+
+
