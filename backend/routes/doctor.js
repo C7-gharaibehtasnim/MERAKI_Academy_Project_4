@@ -4,11 +4,13 @@ const doctorRouter = express.Router();
 
 
 
-const { register } = require("../controllers/doctor");
+const { register,login } = require("../controllers/doctor");
 
 
 
 doctorRouter.post("/register", register);
+doctorRouter.post("/login", login);
+
 
 
 module.exports = doctorRouter;

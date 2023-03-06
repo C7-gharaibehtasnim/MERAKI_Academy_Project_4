@@ -10,6 +10,8 @@ const patientRouter = require("./routes/patient");
 const clinicRouter = require("./routes/clinic");
 const appointmentRouter = require("./routes/appointment");
 const adminRouter = require("./routes/admin");
+const rolesRouter = require("./routes/roles");
+
 
 
 
@@ -22,6 +24,8 @@ app.use("/patient", patientRouter);
 app.use("/appointment", appointmentRouter);
 app.use("/clinic", clinicRouter);
 app.use("/admin", adminRouter);
+app.use("/roles", rolesRouter);
+
 
 
 
