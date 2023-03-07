@@ -8,7 +8,7 @@ const bookAnAppointment = (req, res) => {
   const { date, doctor, time } = req.body;
 
   const appointment = new appointmentModal({ patient, doctor, date, time });
-  appointmentModal.findOne({ date, time }).then((result1) => {
+  appointmentModal.findOne({ date, time,doctor }).then((result1) => {
     if (result1) {
       return res.status(409).json({
         success: false,
@@ -64,6 +64,7 @@ const getAppointmentBypatientID = (req, res) => {
 };
 
 const getAppointmentBydoctorID = (req, res) => {
+  console.log("HIFROM THE FUNCTION")
   const id = req.token.userId;
 
   console.log(req.token.role.role);

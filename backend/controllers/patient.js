@@ -55,9 +55,8 @@ const login = (req, res) => {
     .findOne({ email })
     .populate("role", "-_id -__v")
     .then(async (result) => {
-     console.log(result+"HIIIIIIII")
+      console.log(result + "HIIIIIIII");
       if (!result) {
-         
         return res.status(403).json({
           success: false,
           message: `The email doesn't exist or The password you’ve entered is incorrect`,
@@ -72,10 +71,10 @@ const login = (req, res) => {
             message: `The email doesn't exist or The password you’ve entered is incorrect`,
           });
         }
-        console.log("token result /n"+result)
+        console.log("token result /n" + result);
         const payload = {
           userId: result._id,
-         
+
           role: result.role,
         };
 
@@ -102,7 +101,7 @@ const login = (req, res) => {
     });
 };
 
-const updateprofile=(req,res)=>{
+const updateprofile = (req, res) => {
   const id = req.params.id;
   const filter = req.body;
   Object.keys(filter).forEach((key) => {
@@ -130,8 +129,61 @@ const updateprofile=(req,res)=>{
         err: err.message,
       });
     });
+};
+const deletePatient = (req, res) => {
+  const id = req.params.id;
+  patientModel
+    .findByIdAndDelete(id)
+    .then((result) => {
+      if (!result) {
+        return res.status(404).json({
+          success: false,
+          message: `The doctor with id => ${id} not found`,
+        });
+      }
+      res.status(200).json({
+        success: true,
+        message: `doctor canceld`,
+      });
+    })
+    .catch((err) => {
+      res.status(500).json({
+        success: false,
+        message: `Server Error`,
+        err: err.message,
+      });
+    });
+};
+const veiwProfile=(req,res)=>{
+  let id = req.params.id;
+  patientModel
+    .findById(id)
+  
+    .then((patient) => {
+      if (!patient) {
+        return res.status(404).json({
+          success: false,
+          message: `The patient with id => ${id} not found`,
+        });
+      }
+      res.status(200).json({
+        success: true,
+        message: `The patient ${id} `,
+        patient: patient,
+      });
+    })
+    .catch((err) => {
+      res.status(500).json({
+        success: false,
+        message: `Server Error`,
+        err: err.message,
+      });
+    });
 }
 module.exports = {
-  register,login,updateprofile
-  
+  register,
+  login,
+  updateprofile,
+  deletePatient,
+  veiwProfile,
 };
