@@ -1,5 +1,8 @@
-import React, { useState,useContext } from "react";
+import { Navigate, useNavigate } from "react-router-dom";
+
+import React, { useState, useContext, useEffect } from "react";
 import { UserContext } from "../App";
+import axios from "axios";
 import {
   MDBBtn,
   MDBContainer,
@@ -10,11 +13,54 @@ import {
   MDBCol,
   MDBInput,
 } from "mdb-react-ui-kit";
-
+//const Navigate=useNavigate()
 const Register = () => {
+  const [radiovalue, setRadioValue] = useState("");
+  const [adduser, setAddUser] = useState({});
+  const [imagesrc, setImagesrc] = useState("");
 
-  const [radiovalue, setRadioValue] = useState("")
-const [imagesrc, setImagesrc] = useState("")
+  const { role, setRole } = useContext(UserContext);
+
+  {
+    useEffect(() => {
+      axios
+        .get(`http://localhost:5000/roles`)
+        .then((Response) => {
+          console.log(Response.data.role);
+          setRole(Response.data.role);
+        })
+        .catch((err) => {
+          console.log(err.response.message);
+        });
+    }, []);
+  }
+  const newDoctor = () => {
+console.log(adduser)
+   adduser &&
+    axios
+      .post("http://localhost:5000/doctor/register", adduser )
+      .then((Response) => {
+        //Navigate("/home")
+        console.log(Response.data)
+      })
+      .catch((err) => {
+        console.log(err.response.data.message);
+      });
+  };
+  const newPatient = () => {
+console.log(adduser)
+
+    adduser &&
+    axios
+      .post("http://localhost:5000/patient/register",  adduser)
+      .then((Response) => {
+        // Navigate("/home")
+      })
+      .catch((err) => {
+        console.log(err.response.data);
+      });
+  };
+
   return (
     <MDBContainer fluid>
       <MDBRow className="d-flex justify-content-center align-items-center">
@@ -35,8 +81,12 @@ const [imagesrc, setImagesrc] = useState("")
                 label="First Name"
                 id="form1"
                 type="text"
+                onChange={(e) => {
+                  setAddUser((firstName) => {
+                    return { ...firstName, firstName: e.target.value };
+                  });
+                }}
               />
-
               <MDBRow>
                 <MDBCol md="6">
                   <MDBInput
@@ -44,6 +94,12 @@ const [imagesrc, setImagesrc] = useState("")
                     label="Last Name"
                     id="form2"
                     type="text"
+                    onChange={(e) => {
+
+                      setAddUser((lastName) => {
+                        return { ...lastName, lastName: e.target.value };
+                      });
+                    }}
                   />
                 </MDBCol>
                 <MDBCol md="6" className="mb-4"></MDBCol>
@@ -54,13 +110,17 @@ const [imagesrc, setImagesrc] = useState("")
                     wrapperClass="datepicker mb-4"
                     label="Email"
                     id="form2"
-                    type="password"
+                    type="email"
+                    onChange={(e) => {
+
+                      setAddUser((email) => {
+                        return { ...email, email: e.target.value };
+                      });
+                    }}
                   />
                 </MDBCol>
                 <MDBCol md="6" className="mb-4"></MDBCol>
               </MDBRow>
-
-
               <MDBRow>
                 <MDBCol md="6">
                   <MDBInput
@@ -68,91 +128,155 @@ const [imagesrc, setImagesrc] = useState("")
                     label="Password"
                     id="form2"
                     type="password"
+                    onChange={(e) => {
+
+                      setAddUser((password) => {
+                        return { ...password, password: e.target.value };
+                      });
+                    }}
                   />
                 </MDBCol>
                 <MDBCol md="6" className="mb-4"></MDBCol>
               </MDBRow>
+              {role &&
+                role.map((elem) => {
+                  if (elem.role !== "admin") {
+                    return (
+                      <>
+                        <input
+                          type="radio"
+                          id="Patient-ROLE"
+                          name="Your_Role"
+                          value={elem.role}
+                          onChange={(e) => {
+                            setAddUser((role) => {
+                              return { ...role, role: elem._id };
+                            });
+                            return setRadioValue(e.target.value);
+                          }}
+                        />
+                          <label for="Role">{elem.role}</label>
+                      </>
+                    );
+                  }
+                })}
 
-                    <input  type="radio" id="Patient-ROLE" name="Your_Role" value="patient" onChange={(e)=>{setRadioValue(e.target.value)}} />
-  <label for="Role">Patient</label>
-    <input type="radio" id="Doctor-ROLE" name="Your_Role" value="doctor" onChange={(e)=>{setRadioValue(e.target.value)}}/>
-   <label for="Doctor">Doctor</label>
-   <input type="radio" id="Admin-ROLE" name="Your_Role" value="admin" onChange={(e)=>{setRadioValue(e.target.value)}}/>
-   <label for="Admin">Admin</label>
- 
- {radiovalue==="patient"
-  &&
-  <>
-  <MDBRow>
-                <MDBCol md="6">
-                 <br></br>
-                </MDBCol>
-                <MDBCol md="6" className="mb-4"></MDBCol>
-              </MDBRow>
-  {/* <input type="text" placeholder='Enter Your Incurance Please'/> */}
-  <MDBRow>
-                <MDBCol md="6">
-                  <MDBInput
-                    wrapperClass="datepicker mb-4"
-                    label="insurance"
-                    id="form2"
-                    type="text"
-
+              {radiovalue === "patient" && (
+                <>
+                  <MDBRow>
+                    <MDBCol md="6">
+                      <br></br>
+                    </MDBCol>
+                    <MDBCol md="6" className="mb-4"></MDBCol>
+                  </MDBRow>
+                  <MDBRow>
+                    <MDBCol md="6">
+                      <MDBInput
+                        wrapperClass="datepicker mb-4"
+                        label="insurance"
+                        id="form2"
+                        type="text"
+                        onChange={(e) => {
+                          
+                          setAddUser((insurance) => {
+                            return { ...insurance, insurance: e.target.value };
+                          });
+                        }}
+                      />
+                    </MDBCol>
+                    <MDBCol md="6" className="mb-4"></MDBCol>
+                  </MDBRow>
+                  <MDBRow>
+                    <MDBCol md="6">
+                      <MDBInput
+                        wrapperClass="datepicker mb-4"
+                        label="age"
+                        id="form2"
+                        type="number"
+                        onChange={(e) => {
+                          setAddUser((age) => {
+                            return { ...age, age: e.target.value };
+                          });
+                        }}
+                      />
+                    </MDBCol>
+                    <MDBCol md="6" className="mb-4"></MDBCol>
+                  </MDBRow>
+                  <input
+                    type="radio"
+                    id="Male"
+                    name="YOUR_GENDER"
+                    value="Male"
+                    onChange={(e) => {
+                      setAddUser((gender) => {
+                        return { ...gender, gender: e.target.value };
+                      });
+                    }}
                   />
-                </MDBCol>
-                <MDBCol md="6" className="mb-4"></MDBCol>
-              </MDBRow>
+                    <label for="Role">Male</label> {" "}
+                  <input
+                    type="radio"
+                    id="Doctor-ROLE"
+                    name="YOUR_GENDER"
+                    value="Female"
+                    onChange={(e) => {
+                      setAddUser((gender) => {
+                        return { ...gender, gender: e.target.value };
+                      });
+                    }}
+                  />
+                  <label for="Doctor">Female</label>
+                </>
+              )}
+              {radiovalue === "doctor" && (
+                <>
+                  <MDBRow>
+                    <MDBCol md="6">
+                      <MDBInput
+                        wrapperClass="datepicker mb-4"
+                        label="image link"
+                        id="form2"
+                        type="text"
+                        onChange={(e) => {
+                          setAddUser((gender) => {
+                            return { ...gender, gender: e.target.value };
+                          });
+
+                          setImagesrc(e.target.value);
+                        }}
+                      />
+                    </MDBCol>
+                    <MDBCol md="6" className="mb-4"></MDBCol>
+                  </MDBRow>
+                  <MDBRow>
+                    <MDBCol md="6">
+                      <MDBCardImage src={imagesrc} />
+                    </MDBCol>
+                    <MDBCol md="6" className="mb-4"></MDBCol>
+                  </MDBRow>
+                </>
+              )}
               <MDBRow>
                 <MDBCol md="6">
-                  <MDBInput
-                    wrapperClass="datepicker mb-4"
-                    label="age"
-                    id="form2"
-                    type="number"
-                  />
+                  <br></br>
                 </MDBCol>
-                <MDBCol md="6" className="mb-4"></MDBCol>
               </MDBRow>
-  <input  type="radio" id="Male" name="YOUR_GENDER" value="Male" onChange={(e)=>{}} />
-    <label for="Role">Male</label>
-    <input type="radio" id="Doctor-ROLE" name="YOUR_GENDER" value="Female"   />
-  <label for="Doctor">Female</label>
-  </>
+              <MDBBtn
+                color="success"
+                className="mb-4"
+                size="lg"
+                
+                onClick={() => {
+                  console.log("HI"+adduser)
 
-  }
-  {radiovalue==="doctor" &&
-  <>
-   <MDBRow>
-                <MDBCol md="6">
-                  <MDBInput
-                    wrapperClass="datepicker mb-4"
-                    label="image link"
-                    id="form2"
-                    type="text"
-                    onChange={(e)=>{setImagesrc(e.target.value)}}
-                  />
-                </MDBCol>
-                <MDBCol md="6" className="mb-4"></MDBCol>
-              </MDBRow>
- <MDBRow>
-                <MDBCol md="6">
-                 <MDBCardImage src={imagesrc} />
-                </MDBCol>
-                <MDBCol md="6" className="mb-4"></MDBCol>
-              </MDBRow>
-  </>
-  
-  
-  }
-
-  
-              <MDBRow>
-                <MDBCol md="6">
-<br></br>
-                </MDBCol>
-              </MDBRow>
-
-              <MDBBtn color="success" className="mb-4" size="lg">
+                  console.log("HI"+radiovalue)
+                  if (radiovalue == "patient") {
+                     newPatient();
+                  } else if (radiovalue == "doctor") {
+                     newDoctor();
+                  }
+                }}
+              >
                 Submit
               </MDBBtn>
             </MDBCardBody>
@@ -161,36 +285,6 @@ const [imagesrc, setImagesrc] = useState("")
       </MDBRow>
     </MDBContainer>
   );
-
-  //   return (
-  //     <div>
-  //         <input type="text" placeholder='Enter Your First Name Please'/>
-  //         <input type="text" placeholder='Enter Your Last Name Please'/>
-  //         <input type="email" placeholder='Enter Your Email Please'/>
-  //         <input type="Password" placeholder='Enter Your Password Please'/>
-  //         <br></br>
-
-  //         <input  type="radio" id="Patient-ROLE" name="Your_Role" value="patient" onChange={(e)=>{setRadioValue(e.target.value)}} />
-  //   <label for="Role">Patient</label>
-  //   <input type="radio" id="Doctor-ROLE" name="Your_Role" value="doctor" onChange={(e)=>{setRadioValue(e.target.value)}}/>
-  //   <label for="Doctor">Doctor</label>
-  //   <input type="radio" id="Admin-ROLE" name="Your_Role" value="admin" onChange={(e)=>{setRadioValue(e.target.value)}}/>
-  //   <label for="Admin">Admin</label>
-//   {radiovalue==="patient"
-//   &&
-//   <>
-//   <input type="text" placeholder='Enter Your Incurance Please'/>
-//   <input type="number" placeholder='Enter Your Age please'/>
-//   <input  type="radio" id="Male" name="YOUR_GENDER" value="Male" onChange={(e)=>{}} />
-//     <label for="Role">Male</label>
-//     <input type="radio" id="Doctor-ROLE" name="YOUR_GENDER" value="Female"   />
-//   <label for="Doctor">Female</label>
-//   </>
-
-//   }
-
-  //     </div>
-  //   )
 };
 
 export default Register;

@@ -1,5 +1,5 @@
 import "./App.css";
-import React,{createContext} from "react";
+import React,{useState,createContext} from "react";
 import { Routes, Route } from "react-router-dom";
 import Home from "./components/Home";
 import About from "./components/About";
@@ -11,7 +11,9 @@ import Login from "./components/Login";
 import Navigation from "./components/Navigation";
 export const UserContext = createContext();
 function App() {
+  const [role, setRole] = useState("")
   return (
+    <UserContext.Provider value={{role,setRole}}>
     <div className="App">
       <header className="App-header">
         <h1>Project 4 </h1>
@@ -33,6 +35,7 @@ function App() {
         />
       </Routes>
     </div>
+    </UserContext.Provider>
   );
 }
 

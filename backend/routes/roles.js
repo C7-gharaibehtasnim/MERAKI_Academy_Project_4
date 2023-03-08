@@ -1,7 +1,7 @@
 const express = require("express");
 
 // Import roles controller
-const { createNewRole } = require("../controllers/roles");
+const { createNewRole,getrolebyrolename } = require("../controllers/roles");
 
 // Create roles router
 const rolesRouter = express.Router();
@@ -9,5 +9,7 @@ const rolesRouter = express.Router();
 
 
 rolesRouter.post("/", createNewRole);
+rolesRouter.get("/", getrolebyrolename);
+
 
 module.exports = rolesRouter;

@@ -22,5 +22,30 @@ const createNewRole = (req, res) => {
     });
 };
 
-module.exports = { createNewRole };
+const getrolebyrolename=(req,res)=>{
+  
+  RoleModel
+    .find({})
+
+    .then((role) => {
+     
+      res.status(200).json({
+        success: true,
+        message: `The role  `,
+        role: role,
+       
+      });
+     
+    })
+    .catch((err) => {
+      res.status(500).json({
+        success: false,
+        message: `Server Error`,
+        err: err.message,
+      });
+    });
+
+
+}
+module.exports = { createNewRole,getrolebyrolename };
 
