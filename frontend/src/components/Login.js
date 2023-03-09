@@ -17,16 +17,15 @@ import {
 const Login = () => {
   const Navigate = useNavigate();
   const [loginError, setLoginError] = useState("");
-  const { login, setLogin, isLoggedIn, setIsLoggedIn, token, setToken } =
+  const { login, setLogin, isLoggedIn, setIsLoggedIn, token, setToken,setuserid } =
     useContext(UserContext);
+    const navegationpath=""
   const LoginFunc = () => {
     axios
       .post("http://localhost:5000/roles/login",login )
       .then((Response) => {
-        // Response.role==="patient"
-        // {
-          
-        // }
+        console.log(Response.data.role)
+       
         setIsLoggedIn((current) => {
           return !current;
         });
@@ -35,8 +34,27 @@ const Login = () => {
           return (current = Response.data.token);
          
         });
+        setuserid((current) => {
+          
+          return (current = Response.data.id);
+         
+        });
+      console.log(Response.data)
         localStorage.setItem("token",Response.data.token)
-        Navigate("/")
+       
+        if(Response.data.role==="patient")
+        {
+          Navigate("/patient")
+        }
+        if(Response.data.role==="doctor")
+        {
+          
+          Navigate("/doctor")
+        }
+        if(Response.data.role==="admin")
+        {
+          Navigate("/admin")
+        }
         console.log(Response.data);
       })
       .catch((err) => {

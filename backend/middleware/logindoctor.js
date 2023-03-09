@@ -44,7 +44,8 @@ const loginDoctor = (req, res,next) => {
             success: true,
             message: `Valid login credentials`,
             token: token,
-            role:result.role.role
+            role:result.role.role,
+            id:result._id
           });
         } catch (error) {
           throw new Error(error.message);

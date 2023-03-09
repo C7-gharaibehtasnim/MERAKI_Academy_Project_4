@@ -10,9 +10,12 @@ import Login from "./components/Login";
 import Navigation from "./components/Navigation";
 import {  useNavigate } from "react-router-dom";
 import DoctorProfile from "./components/DoctorProfile";
+import PatientProfile from "./components/PatientProfile";
+import Adminprofile from "./components/Adminprofile";
 export const UserContext = createContext();
 function App() {
   const Navigate=useNavigate()
+  const [userId, setuserid] = useState("");
   const [login, setLogin] = useState({ email: "hi", password: "hello" });
   const [token, setToken] = useState(localStorage.getItem("token"));
  console.log(token)
@@ -20,13 +23,13 @@ function App() {
   if(token)
   {
     setIsLoggedIn(true)
-    Navigate("/")
+    //Navigate("/")
   }
  },[token])
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [role, setRole, ] = useState("")
   return (
-    <UserContext.Provider value={{role,setRole,login, setLogin, isLoggedIn, setIsLoggedIn, token, setToken}}>
+    <UserContext.Provider value={{userId,setuserid,login, setLogin, isLoggedIn, setIsLoggedIn, token, setToken}}>
     <div className="App">
       <header className="App-header">
         <h1>Project 4 </h1>
@@ -39,7 +42,9 @@ function App() {
         <Route path="/donate" element={<Donate />} />
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/doctor" element={<DoctorProfile />} />
+        <Route path="/doctor" element={<DoctorProfile/>} />
+        <Route path="/patient" element={<PatientProfile/>} />
+        <Route path="/admin" element={<Adminprofile/>} />
 
         
         <Route

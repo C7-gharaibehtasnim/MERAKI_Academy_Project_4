@@ -1,4 +1,4 @@
-import React ,{useEffect} from "react";
+import React ,{useContext, useEffect,useState} from "react";
 
 import {
   MDBCol,
@@ -12,15 +12,39 @@ import {
   MDBIcon,
 } from "mdb-react-ui-kit";
 import axios from "axios";
+import { UserContext } from "../App";
 
 const DoctorProfile = () => {
-  useEffect(() => {
-    axios.get("")
   
-    return () => {
-      
-    }
-  }, [])
+const [image, setImage] = useState("")
+const [firstName, setFirstName] = useState("")
+const [lastname, setLastname] = useState("")
+const [clinic, setClinic] = useState("")
+const [email, setEmail] = useState("")
+const [appointments, setAppointments] = useState([])
+  const{token,userId}=useContext(UserContext)
+  console.log(userId)
+  useEffect(() => {
+    axios
+      .get(`http://localhost:5000/doctor/${userId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .then((Response) => {
+        console.log(Response);
+        setImage(Response.data.image)
+        setFirstName(Response.data.firstName)
+        setLastname(Response.data.lastname)
+        setEmail(Response.data.email)
+        setClinic(Response.data.clinic)
+        setAppointments(Response.data.appointments)
+
+      })
+      .catch((err) => {
+    
+      });
+  }, []);
+  
+   
   
   return (
     <section className="vh-100" style={{ backgroundColor: "#f4f5f7" }}>
@@ -38,14 +62,14 @@ const DoctorProfile = () => {
                   }}
                 >
                   <MDBCardImage
-                    src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava1-bg.webp"
+                    src={image}
                     alt="Avatar"
                     className="my-5"
                     style={{ width: "80px" }}
                     fluid
                   />
-                  <MDBTypography tag="h5">Marie Horwitz</MDBTypography>
-                  <MDBCardText>Web Designer</MDBCardText>
+                  <MDBTypography tag="h5">{firstName}{" "} {lastname}</MDBTypography>
+                  <MDBCardText>{clinic}</MDBCardText>
                   <MDBIcon far icon="edit mb-5" />
                 </MDBCol>
                 <MDBCol md="8">
@@ -54,7 +78,7 @@ const DoctorProfile = () => {
                     <hr className="mt-0 mb-4" />
                     <MDBRow className="pt-1">
                       <MDBCol size="6" className="mb-3">
-                        <MDBTypography tag="h6">Email</MDBTypography>
+                        <MDBTypography tag="h6">{email}</MDBTypography>
                         <MDBCardText className="text-muted">
                           info@example.com
                         </MDBCardText>
