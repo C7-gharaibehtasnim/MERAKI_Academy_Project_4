@@ -1,6 +1,6 @@
-import { Navigate, useNavigate } from "react-router-dom";
+import {  useNavigate } from "react-router-dom";
 
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext, useEffect,} from "react";
 import { UserContext } from "../App";
 import axios from "axios";
 import {
@@ -13,14 +13,16 @@ import {
   MDBCol,
   MDBInput,
 } from "mdb-react-ui-kit";
-//const Navigate=useNavigate()
+
 const Register = () => {
+  const Navigate=useNavigate()
   const [radiovalue, setRadioValue] = useState("");
   const [adduser, setAddUser] = useState({});
   const [imagesrc, setImagesrc] = useState("");
 
   const { role, setRole } = useContext(UserContext);
-
+  const { token, setToken } =
+  useContext(UserContext);
   {
     useEffect(() => {
       axios
@@ -40,11 +42,17 @@ console.log(adduser)
     axios
       .post("http://localhost:5000/doctor/register", adduser )
       .then((Response) => {
-        //Navigate("/home")
+        setToken((current) => {
+          
+          return (current = Response.data.token);
+         
+        });
+        localStorage.setItem("token",Response.data.token)
+        Navigate("/")
         console.log(Response.data)
       })
       .catch((err) => {
-        console.log(err.response.data.message);
+        console.log(err);
       });
   };
   const newPatient = () => {
@@ -54,10 +62,11 @@ console.log(adduser)
     axios
       .post("http://localhost:5000/patient/register",  adduser)
       .then((Response) => {
-        // Navigate("/home")
+        localStorage.setItem("token",Response.data.token)
+        Navigate("/")
       })
       .catch((err) => {
-        console.log(err.response.data);
+        console.log(err.response);
       });
   };
 
@@ -238,8 +247,8 @@ console.log(adduser)
                         id="form2"
                         type="text"
                         onChange={(e) => {
-                          setAddUser((gender) => {
-                            return { ...gender, gender: e.target.value };
+                          setAddUser((image) => {
+                            return { ...image, image: e.target.value };
                           });
 
                           setImagesrc(e.target.value);
@@ -274,6 +283,7 @@ console.log(adduser)
                      newPatient();
                   } else if (radiovalue == "doctor") {
                      newDoctor();
+                    
                   }
                 }}
               >

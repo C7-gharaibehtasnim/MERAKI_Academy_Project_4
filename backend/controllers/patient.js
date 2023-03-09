@@ -1,8 +1,11 @@
+const { genrateToken } = require("./config");
 const patientModel = require("../models/patientSchema");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const { response } = require("express");
 
 const register = (req, res) => {
+  console.log("dsfsf");
   const {
     firstName,
     lastName,
@@ -25,11 +28,32 @@ const register = (req, res) => {
   patient
     .save()
     .then((result) => {
-      res.status(201).json({
-        success: true,
-        message: `Account Created Successfully`,
-        author: result,
-      });
+      //console.log(result)
+      //console.log(result._id)
+      patientModel
+        .find({ role })
+        .populate("role")
+        .exec()
+        .then((response) => {
+          console.log("sdfFwfWEFWEFWEFWEFWEF" + response);
+          const payload = {
+            userId: result._id,
+
+            role: response.role,
+          };
+
+          const options = {
+            expiresIn: "24h",
+          };
+          const token = genrateToken(payload, options);
+
+          res.status(201).json({
+            success: true,
+            message: `Account Created Successfully`,
+            author: result,
+            token: token,
+          });
+        });
     })
     .catch((err) => {
       if (err.keyPattern) {
@@ -48,23 +72,20 @@ const register = (req, res) => {
 const login = (req, res) => {
   const password = req.body.password;
   const email = req.body.email.toLowerCase();
-  ////console.log(password)
-  //console.log(email)
 
   patientModel
     .findOne({ email })
     .populate("role", "-_id -__v")
     .then(async (result) => {
       console.log(result + "HIIIIIIII");
-      if (!result) {
-        return res.status(403).json({
-          success: false,
-          message: `The email doesn't exist or The password you’ve entered is incorrect`,
-        });
-      }
+        if (!result) {
+          return res.status(403).json({
+            success: false,
+            message: `The email doesn't exist or The password you’ve entered is incorrect`,
+          });
+       }
       try {
         const valid = await bcrypt.compare(password, result.password);
-        ////console.log( "68"+valid)
         if (!valid) {
           return res.status(403).json({
             success: false,
@@ -81,8 +102,8 @@ const login = (req, res) => {
         const options = {
           expiresIn: "24h",
         };
-        //console.log( process.env.SECRET)
-        const token = jwt.sign(payload, process.env.SECRET, options);
+        const token = genrateToken(payload, options);
+
         res.status(200).json({
           success: true,
           message: `Valid login credentials`,
@@ -154,11 +175,11 @@ const deletePatient = (req, res) => {
       });
     });
 };
-const veiwProfile=(req,res)=>{
+const veiwProfile = (req, res) => {
   let id = req.params.id;
   patientModel
     .findById(id)
-  
+
     .then((patient) => {
       if (!patient) {
         return res.status(404).json({
@@ -179,7 +200,7 @@ const veiwProfile=(req,res)=>{
         err: err.message,
       });
     });
-}
+};
 module.exports = {
   register,
   login,

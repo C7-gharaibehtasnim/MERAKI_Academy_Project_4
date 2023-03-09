@@ -1,5 +1,5 @@
 import "./App.css";
-import React,{useState,createContext} from "react";
+import React,{useState,createContext,useEffect} from "react";
 import { Routes, Route } from "react-router-dom";
 import Home from "./components/Home";
 import About from "./components/About";
@@ -7,13 +7,25 @@ import Clinics from "./components/Clinics";
 import Donate from "./components/Donate";
 import Register from "./components/Register";
 import Login from "./components/Login";
-
 import Navigation from "./components/Navigation";
+import {  useNavigate } from "react-router-dom";
 export const UserContext = createContext();
 function App() {
-  const [role, setRole] = useState("")
+  const Navigate=useNavigate()
+  const [login, setLogin] = useState({ email: "hi", password: "hello" });
+  const [token, setToken] = useState(localStorage.getItem("token"));
+ console.log(token)
+ useEffect(()=>{
+  if(token)
+  {
+    setIsLoggedIn(true)
+    Navigate("/")
+  }
+ },[token])
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [role, setRole, ] = useState("")
   return (
-    <UserContext.Provider value={{role,setRole}}>
+    <UserContext.Provider value={{role,setRole,login, setLogin, isLoggedIn, setIsLoggedIn, token, setToken}}>
     <div className="App">
       <header className="App-header">
         <h1>Project 4 </h1>

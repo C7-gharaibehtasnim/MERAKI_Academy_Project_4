@@ -5,16 +5,17 @@ const authentication = require("../middleware/authentication");
 const { getAppointmentBydoctorID } = require("../controllers/appointment");
 const {
   register,
-  login,
+  //login,
   updateprofile,
   addDoctor,
   deleteDoctor,
   veiwProfile,
 } = require("../controllers/doctor");
 const authorization = require("../middleware/authorization");
+const { genrateToken } = require("../controllers/config");
 
 doctorRouter.post("/register", register);
-doctorRouter.post("/login", login);
+//doctorRouter.post("/login", login,genrateToken);
 doctorRouter.post("/add", addDoctor);
 doctorRouter.delete(
   "/delete/:id",

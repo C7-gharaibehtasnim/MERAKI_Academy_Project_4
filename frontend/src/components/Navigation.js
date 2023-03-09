@@ -10,24 +10,40 @@ import Offcanvas from 'react-bootstrap/Offcanvas';
  
    
    const Navigation = () => {
-     return (
+    return (
+  <></>
+    
+    );
+
+
+
+
+
+
+
+
+
+
+
+
+      
    
-<div>
-      <Link to="/"> Home </Link>
-      <Link to="/about"> About </Link>
-      <Link to="/clinics"> Clinics </Link>
-      <Link to="/donate"> Donate </Link>
-      <Link to="/register"> Register </Link>
-      <Link to="/login"> Login </Link>
+// <div>
+//       <Link to="/"> Home </Link>
+//       <Link to="/about"> About </Link>
+//       <Link to="/clinics"> Clinics </Link>
+//       <Link to="/donate"> Donate </Link>
+//       <Link to="/register"> Register </Link>
+//       <Link to="/login"> Login </Link>
 
 
-    </div>
+//     </div>
 
 
       
   
       
-     )
+     
    }
    
    export default Navigation
@@ -55,35 +71,35 @@ import Offcanvas from 'react-bootstrap/Offcanvas';
   //   </Container>  
   // </Navbar>  
 
-// <Navbar inverse collapseOnSelect>
-//   <Navbar.Header>
-//     <Navbar.Brand>
-//       <a href="#brand">React-Bootstrap</a>
-//     </Navbar.Brand>
-//     <Navbar.Toggle />
-//   </Navbar.Header>
-//   <Navbar.Collapse>
-//     <Nav>
-//       <NavItem eventKey={1} href="#">
-//         Link
-//       </NavItem>
-//       <NavItem eventKey={2} href="#">
-//         Link
-//       </NavItem>
-//       <NavDropdown eventKey={3} title="Dropdown" id="basic-nav-dropdown">
+{/* <Navbar inverse collapseOnSelect>
+  <Navbar.Header>
+    <Navbar.Brand>
+      <a href="#brand">React-Bootstrap</a>
+    </Navbar.Brand>
+    <Navbar.Toggle />
+  </Navbar.Header>
+  <Navbar.Collapse>
+    <Nav>
+      <NavItem eventKey={1} href="#">
+        Link
+      </NavItem>
+      <NavItem eventKey={2} href="#">
+        Link
+      </NavItem>
+      <NavDropdown eventKey={3} title="Dropdown" id="basic-nav-dropdown">
        
-//       </NavDropdown>
-//     </Nav>
-//     <Nav pullRight>
-//       <NavItem eventKey={1} href="#">
-//         Link Right
-//       </NavItem>
-//       <NavItem eventKey={2} href="#">
-//         Link Right
-//       </NavItem>
-//     </Nav>
-//   </Navbar.Collapse>
-// </Navbar>
+      </NavDropdown>
+    </Nav>
+    <Nav pullRight>
+      <NavItem eventKey={1} href="#">
+        Link Right
+      </NavItem>
+      <NavItem eventKey={2} href="#">
+        Link Right
+      </NavItem>
+    </Nav>
+  </Navbar.Collapse>
+</Navbar> */}
 
 
     
