@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-
+import { DateRangePicker } from 'rsuite';
 import {
   MDBCol,
   MDBContainer,
@@ -30,7 +30,7 @@ const DoctorProfile = () => {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((Response) => {
-        console.log(Response.data);
+        console.log(Response.data.doctor.appointments);
         setImage(Response.data.doctor.image);
         setFirstName(Response.data.doctor.firstName);
          setLastname(Response.data.doctor.lastName);
@@ -69,37 +69,39 @@ const DoctorProfile = () => {
                   </MDBTypography>
                   <MDBCardText>{clinic}</MDBCardText>
                   <MDBIcon far icon="edit mb-5" />
-                </MDBCol>
-                <MDBCol md="8">
-                  <MDBCardBody className="p-4">
-                    <MDBTypography tag="h6">Information</MDBTypography>
-                    <hr className="mt-0 mb-4" />
-                    <MDBRow className="pt-1">
-                      <MDBCol size="6" className="mb-3">
+                  <MDBCol size="6" className="mb-3">
+                  <MDBRow className="pt-1">
                         <MDBTypography tag="h6">{email}</MDBTypography>
                         <MDBCardText className="text-muted">
                           {email}
                         </MDBCardText>
+                        </MDBRow>
                       </MDBCol>
-                      <MDBCol size="6" className="mb-3">
-                        <MDBTypography tag="h6">Phone</MDBTypography>
-                        {appointments &&
+                </MDBCol>
+                <MDBCol md="8">
+                  <MDBCardBody className="p-4">
+                    <MDBTypography tag="h6">MY Appointments</MDBTypography>
+                    <hr className="mt-0 mb-4" />
+                    <MDBCol size="6" className="mb-3">
+                    <MDBRow className="pt-1">
+                   
+                    {appointments &&
+                    
                           appointments.map((Element) => {
                             <MDBCardText className="text-muted">
-                              {Element}
+                             {Element}
                             </MDBCardText>;
                           })}
-                      </MDBCol>
+                     
                     </MDBRow>
-
-                    <MDBTypography tag="h6">Information</MDBTypography>
+                    </MDBCol>
+                    <MDBTypography tag="h6">Submit a vacation</MDBTypography>
                     <hr className="mt-0 mb-4" />
                     <MDBRow className="pt-1">
                       <MDBCol size="6" className="mb-3">
                         <MDBTypography tag="h6">Email</MDBTypography>
-                        <MDBCardText className="text-muted">
-                          {email}
-                        </MDBCardText>
+                        <DateRangePicker />
+                        
                       </MDBCol>
                       <MDBCol size="6" className="mb-3">
                         <MDBTypography tag="h6">Phone</MDBTypography>

@@ -181,6 +181,7 @@ const veiwProfile=(req,res)=>{
     .findById(id).populate("clinic").populate("appointments").exec()
   
     .then((doctor) => {
+      console.log(doctor)
       if (!doctor) {
         return res.status(404).json({
           success: false,

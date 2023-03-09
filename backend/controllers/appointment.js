@@ -8,38 +8,42 @@ const bookAnAppointment = (req, res) => {
   const { date, doctor, time } = req.body;
 
   const appointment = new appointmentModal({ patient, doctor, date, time });
-  appointmentModal.findOne({ date, time,doctor }).then((result1) => {
-    if (result1) {
-      return res.status(409).json({
-        success: false,
-        message: `This appointment already booked at this date `,
-      });
-    } else {
-      appointment
-        .save()
-        .then((result) => {
-          res.status(201).json({
-            success: true,
-            message: `Appointment Booked Successfully`,
-            appointment: result,
-          });
-        })
-        .catch((err) => {
-          res.status(500).json({
-            success: false,
-            message: `Server Error`,
-            err: err.message,
-          });
+  appointmentModal
+    .findOne({ date, time, doctor })
+    .populate("patient")
+    .exec()
+    .then((result1) => {
+      if (result1) {
+        return res.status(409).json({
+          success: false,
+          message: `This appointment already booked at this date `,
         });
-    }
-  });
+      } else {
+        appointment
+          .save()
+          .then((result) => {
+            res.status(201).json({
+              success: true,
+              message: `Appointment Booked Successfully`,
+              appointment: result,
+            });
+          })
+          .catch((err) => {
+            res.status(500).json({
+              success: false,
+              message: `Server Error`,
+              err: err.message,
+            });
+          });
+      }
+    });
 };
 const getAppointmentBypatientID = (req, res) => {
   const id = req.token.userId;
 
   console.log(req.token.role.role);
   appointmentModal
-    .find({ patient: id }).populate("patient").exec()
+    .find({ patient: id })
 
     .then((appointment) => {
       if (!appointment) {
@@ -64,7 +68,7 @@ const getAppointmentBypatientID = (req, res) => {
 };
 
 const getAppointmentBydoctorID = (req, res) => {
-  console.log("HIFROM THE FUNCTION")
+  console.log("HIFROM THE FUNCTION");
   const id = req.token.userId;
 
   console.log(req.token.role.role);
@@ -117,7 +121,7 @@ const deleteAppoitment = (req, res) => {
       });
     });
 };
-const UpdateAppoitment=(req,res)=>{
+const UpdateAppoitment = (req, res) => {
   const id = req.params.appointmentid;
   const filter = req.body;
   Object.keys(filter).forEach((key) => {
@@ -145,7 +149,7 @@ const UpdateAppoitment=(req,res)=>{
         err: err.message,
       });
     });
-}
+};
 module.exports = {
   bookAnAppointment,
   getAppointmentBypatientID,

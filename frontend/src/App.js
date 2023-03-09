@@ -13,6 +13,8 @@ import DoctorProfile from "./components/DoctorProfile";
 import PatientProfile from "./components/PatientProfile";
 import Adminprofile from "./components/Adminprofile";
 import 'mdb-react-ui-kit/dist/css/mdb.min.css';
+import "rsuite/dist/rsuite.css";
+
 export const UserContext = createContext();
 function App() {
   const Navigate=useNavigate()
