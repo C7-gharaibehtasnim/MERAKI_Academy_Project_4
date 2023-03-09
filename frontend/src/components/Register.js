@@ -21,7 +21,7 @@ const Register = () => {
   const [imagesrc, setImagesrc] = useState("");
 
   const { role, setRole } = useContext(UserContext);
-  const { token, setToken } =
+  const { token, setToken,setuserid,setIsLoggedIn } =
   useContext(UserContext);
   {
     useEffect(() => {
@@ -42,14 +42,28 @@ console.log(adduser)
     axios
       .post("http://localhost:5000/doctor/register", adduser )
       .then((Response) => {
-        setToken((current) => {
-          
-          return (current = Response.data.token);
-         
+        setIsLoggedIn((current) => {
+          return !current;
         });
-        localStorage.setItem("token",Response.data.token)
-        Navigate("/")
-        console.log(Response.data)
+        setToken((current) => {
+          return (current = Response.data.token);
+        });
+        setuserid((current) => {
+          return (current = Response.data.id);
+        });
+        console.log(Response.data);
+        localStorage.setItem("token", Response.data.token);
+        localStorage.setItem("userId", Response.data.id);
+
+        if (Response.data.role === "patient") {
+          Navigate("/patient");
+        }
+        if (Response.data.role === "doctor") {
+          Navigate("/doctor");
+        }
+        if (Response.data.role === "admin") {
+          Navigate("/admin");
+        }
       })
       .catch((err) => {
         console.log(err);
@@ -240,6 +254,23 @@ console.log(adduser)
               {radiovalue === "doctor" && (
                 <>
                   <MDBRow>
+                <MDBCol md="6">
+                  <MDBInput
+                    wrapperClass="datepicker mb-4"
+                    label="Clinic"
+                    id="form2"
+                    type="text"
+                    onChange={(e) => {
+
+                      setAddUser((clinic) => {
+                        return { ...clinic, clinic: e.target.value };
+                      });
+                    }}
+                  />
+                </MDBCol>
+                <MDBCol md="6" className="mb-4"></MDBCol>
+              </MDBRow>
+                  <MDBRow>
                     <MDBCol md="6">
                       <MDBInput
                         wrapperClass="datepicker mb-4"
@@ -263,8 +294,25 @@ console.log(adduser)
                     </MDBCol>
                     <MDBCol md="6" className="mb-4"></MDBCol>
                   </MDBRow>
+                
+                
+                
+                
+                
+                
+                
+                
+                
                 </>
-              )}
+              
+              
+              
+              
+              
+              )
+
+              
+              }
               <MDBRow>
                 <MDBCol md="6">
                   <br></br>
@@ -291,8 +339,11 @@ console.log(adduser)
               </MDBBtn>
             </MDBCardBody>
           </MDBCard>
+          
         </MDBCol>
       </MDBRow>
+      
+      
     </MDBContainer>
   );
 };

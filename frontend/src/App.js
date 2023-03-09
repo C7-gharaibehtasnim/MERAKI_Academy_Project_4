@@ -12,10 +12,11 @@ import {  useNavigate } from "react-router-dom";
 import DoctorProfile from "./components/DoctorProfile";
 import PatientProfile from "./components/PatientProfile";
 import Adminprofile from "./components/Adminprofile";
+import 'mdb-react-ui-kit/dist/css/mdb.min.css';
 export const UserContext = createContext();
 function App() {
   const Navigate=useNavigate()
-  const [userId, setuserid] = useState("");
+  const [userId, setuserid] = useState(localStorage.getItem("userId"));
   const [login, setLogin] = useState({ email: "hi", password: "hello" });
   const [token, setToken] = useState(localStorage.getItem("token"));
  console.log(token)
@@ -27,9 +28,9 @@ function App() {
   }
  },[token])
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [role, setRole, ] = useState("")
+  const [role, setRole ] = useState("")
   return (
-    <UserContext.Provider value={{userId,setuserid,login, setLogin, isLoggedIn, setIsLoggedIn, token, setToken}}>
+    <UserContext.Provider value={{role, setRole ,userId,setuserid,login, setLogin, isLoggedIn, setIsLoggedIn, token, setToken}}>
     <div className="App">
       <header className="App-header">
         <h1>Project 4 </h1>

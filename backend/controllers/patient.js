@@ -52,6 +52,8 @@ const register = (req, res) => {
             message: `Account Created Successfully`,
             author: result,
             token: token,
+            role:response.role.role,
+            id:result._id
           });
         });
     })

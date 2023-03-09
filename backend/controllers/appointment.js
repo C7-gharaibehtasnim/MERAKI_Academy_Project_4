@@ -39,7 +39,7 @@ const getAppointmentBypatientID = (req, res) => {
 
   console.log(req.token.role.role);
   appointmentModal
-    .find({ patient: id })
+    .find({ patient: id }).populate("patient").exec()
 
     .then((appointment) => {
       if (!appointment) {

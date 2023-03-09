@@ -10,7 +10,7 @@ const register = (req, res) => {
     lastName,
     email,
     password,
-    insurance,
+    // insurance,
     appointments,
     clinic,
     role,
@@ -21,33 +21,39 @@ const register = (req, res) => {
     lastName,
     email,
     password,
-    insurance,
+    // insurance,
     appointments,
     clinic,
     role,
   });
-
+console.log(req.body);
   doctor
     .save()
     .then((result) => {
-      patient.find({role}).populate("role").exec().then((response)=>{console.log( "sdfFwfWEFWEFWEFWEFWEF"+response)
+      doctorModel.findOne({email}).populate("role").exec().then((response)=>{
+        console.log("ddd",response)
       const payload = {
         userId: result._id,
 
      role: response.role,
+    
       };
-
+     
       const options = {
         expiresIn: "24h",
       };
+      console.log("43",payload)
      const token= genrateToken(payload,options)
      
      res.status(201).json({
        success: true,
        message: `Account Created Successfully`,
-       author: result,
-       token:token
-     });
+      
+       
+       token:token,
+       role:result.role.role,
+       id: result._id,
+             });
    })
      
     })
@@ -58,69 +64,16 @@ const register = (req, res) => {
           message: `The email already exists`,
         });
       }
+      else{
       res.status(500).json({
         success: false,
         message: `Server Error`,
         err: err.message,
       });
+    }
     });
 };
 
-// const loginDoctor = (req, res,next) => {
-//   const password = req.body.password;
-//   const email = req.body.email.toLowerCase();
-//   console.log(password);
-//   console.log(email);
-//   doctorModel
-//     .findOne({ email })
-//     .populate("role", "-_id -__v")
-//     .then(async (result) => {
-//       console.log(result);
-//       if (!result) {
-//         // return res.status(403).json({
-//         //   success: false,
-//         //   message: `The email doesn't exist or The password you’ve entered is incorrect`,
-//         // });
-//         next()
-//       }
-//       try {
-//         const valid = await bcrypt.compare(password, result.password);
-//         console.log(valid);
-//         if (!valid) {
-//           return res.status(403).json({
-//             success: false,
-//             message: `The email doesn't exist or The password you’ve entered is incorrect`,
-//           });
-//         }
-//         const payload = {
-//           userId: result._id,
-
-//           role: result.role,
-//         };
-
-//         const options = {
-//           expiresIn: "60m",
-//         };
-//         console.log(process.env.SECRET);
-//         const token=genrateToken(payload,options)
-//        // const token = jwt.sign(payload, process.env.SECRET, options);
-//         res.status(200).json({
-//           success: true,
-//           message: `Valid login credentials`,
-//           token: token,
-//         });
-//       } catch (error) {
-//         throw new Error(error.message);
-//       }
-//     })
-//     .catch((err) => {
-//       res.status(500).json({
-//         success: false,
-//         message: `Server Error`,
-//         err: err.message,
-//       });
-//     });
-// };
 
 const updateprofile = (req, res) => {
   const id = req.params.id;
@@ -225,7 +178,7 @@ const deleteDoctor = (req, res) => {
 const veiwProfile=(req,res)=>{
   let id = req.params.id;
   doctorModel
-    .findById(id)
+    .findById(id).populate("clinic").populate("appointments").exec()
   
     .then((doctor) => {
       if (!doctor) {
@@ -250,7 +203,7 @@ const veiwProfile=(req,res)=>{
 }
 module.exports = {
   register,
-  // loginDoctor,
+ 
   updateprofile,
   addDoctor,
   deleteDoctor,

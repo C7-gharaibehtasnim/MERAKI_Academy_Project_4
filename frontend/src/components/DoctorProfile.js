@@ -1,4 +1,4 @@
-import React ,{useContext, useEffect,useState} from "react";
+import React, { useContext, useEffect, useState } from "react";
 
 import {
   MDBCol,
@@ -15,37 +15,32 @@ import axios from "axios";
 import { UserContext } from "../App";
 
 const DoctorProfile = () => {
-  
-const [image, setImage] = useState("")
-const [firstName, setFirstName] = useState("")
-const [lastname, setLastname] = useState("")
-const [clinic, setClinic] = useState("")
-const [email, setEmail] = useState("")
-const [appointments, setAppointments] = useState([])
-  const{token,userId}=useContext(UserContext)
-  console.log(userId)
+  const [image, setImage] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastname, setLastname] = useState("");
+  const [clinic, setClinic] = useState("");
+  const [email, setEmail] = useState("");
+  const [appointments, setAppointments] = useState(null);
+  const { token, userId } = useContext(UserContext);
+  // console.log(userId);
+  // console.log("line27", token);
   useEffect(() => {
     axios
       .get(`http://localhost:5000/doctor/${userId}`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((Response) => {
-        console.log(Response);
-        setImage(Response.data.image)
-        setFirstName(Response.data.firstName)
-        setLastname(Response.data.lastname)
-        setEmail(Response.data.email)
-        setClinic(Response.data.clinic)
-        setAppointments(Response.data.appointments)
-
+        console.log(Response.data);
+        setImage(Response.data.doctor.image);
+        setFirstName(Response.data.doctor.firstName);
+         setLastname(Response.data.doctor.lastName);
+        setEmail(Response.data.doctor.email);
+        setClinic(Response.data.doctor.clinic);
+         setAppointments(Response.data.doctor.appointments);
       })
-      .catch((err) => {
-    
-      });
+      .catch((err) => {console.log(err)});
   }, []);
-  
-   
-  
+
   return (
     <section className="vh-100" style={{ backgroundColor: "#f4f5f7" }}>
       <MDBContainer className="py-5 h-100">
@@ -68,7 +63,10 @@ const [appointments, setAppointments] = useState([])
                     style={{ width: "80px" }}
                     fluid
                   />
-                  <MDBTypography tag="h5">{firstName}{" "} {lastname}</MDBTypography>
+                  <MDBTypography tag="h5">
+                    {firstName +"  "+lastname}
+                    
+                  </MDBTypography>
                   <MDBCardText>{clinic}</MDBCardText>
                   <MDBIcon far icon="edit mb-5" />
                 </MDBCol>
@@ -80,14 +78,17 @@ const [appointments, setAppointments] = useState([])
                       <MDBCol size="6" className="mb-3">
                         <MDBTypography tag="h6">{email}</MDBTypography>
                         <MDBCardText className="text-muted">
-                          info@example.com
+                          {email}
                         </MDBCardText>
                       </MDBCol>
                       <MDBCol size="6" className="mb-3">
                         <MDBTypography tag="h6">Phone</MDBTypography>
-                        <MDBCardText className="text-muted">
-                          123 456 789
-                        </MDBCardText>
+                        {appointments &&
+                          appointments.map((Element) => {
+                            <MDBCardText className="text-muted">
+                              {Element}
+                            </MDBCardText>;
+                          })}
                       </MDBCol>
                     </MDBRow>
 
@@ -97,7 +98,7 @@ const [appointments, setAppointments] = useState([])
                       <MDBCol size="6" className="mb-3">
                         <MDBTypography tag="h6">Email</MDBTypography>
                         <MDBCardText className="text-muted">
-                          info@example.com
+                          {email}
                         </MDBCardText>
                       </MDBCol>
                       <MDBCol size="6" className="mb-3">
@@ -107,18 +108,6 @@ const [appointments, setAppointments] = useState([])
                         </MDBCardText>
                       </MDBCol>
                     </MDBRow>
-
-                    <div className="d-flex justify-content-start">
-                      <a href="#!">
-                        <MDBIcon fab icon="facebook me-3" size="lg" />
-                      </a>
-                      <a href="#!">
-                        <MDBIcon fab icon="twitter me-3" size="lg" />
-                      </a>
-                      <a href="#!">
-                        <MDBIcon fab icon="instagram me-3" size="lg" />
-                      </a>
-                    </div>
                   </MDBCardBody>
                 </MDBCol>
               </MDBRow>

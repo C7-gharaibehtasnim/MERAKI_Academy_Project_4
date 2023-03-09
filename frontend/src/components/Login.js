@@ -1,5 +1,4 @@
-
-import {  useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import React, { useState, useContext, useEffect } from "react";
 import { UserContext } from "../App";
@@ -17,43 +16,43 @@ import {
 const Login = () => {
   const Navigate = useNavigate();
   const [loginError, setLoginError] = useState("");
-  const { login, setLogin, isLoggedIn, setIsLoggedIn, token, setToken,setuserid } =
-    useContext(UserContext);
-    const navegationpath=""
+  const {
+    userId,
+    login,
+    setLogin,
+    isLoggedIn,
+    setIsLoggedIn,
+    token,
+    setToken,
+    setuserid,
+  } = useContext(UserContext);
   const LoginFunc = () => {
     axios
-      .post("http://localhost:5000/roles/login",login )
+      .post("http://localhost:5000/roles/login", login)
       .then((Response) => {
-        console.log(Response.data.role)
-       
+        console.log(Response.data.role);
+
         setIsLoggedIn((current) => {
           return !current;
         });
         setToken((current) => {
-          
           return (current = Response.data.token);
-         
         });
         setuserid((current) => {
-          
           return (current = Response.data.id);
-         
         });
-      console.log(Response.data)
-        localStorage.setItem("token",Response.data.token)
-       
-        if(Response.data.role==="patient")
-        {
-          Navigate("/patient")
+        console.log(Response.data);
+        localStorage.setItem("token", Response.data.token);
+        localStorage.setItem("userId", Response.data.id);
+
+        if (Response.data.role === "patient") {
+          Navigate("/patient");
         }
-        if(Response.data.role==="doctor")
-        {
-          
-          Navigate("/doctor")
+        if (Response.data.role === "doctor") {
+          Navigate("/doctor");
         }
-        if(Response.data.role==="admin")
-        {
-          Navigate("/admin")
+        if (Response.data.role === "admin") {
+          Navigate("/admin");
         }
         console.log(Response.data);
       })
@@ -61,10 +60,6 @@ const Login = () => {
         setLoginError(err.response.data.message);
       });
   };
-
-
-
-
 
   return (
     <MDBContainer fluid>
@@ -78,11 +73,8 @@ const Login = () => {
             />
 
             <MDBCardBody className="px-5">
-              <h3 className="mb-4 pb-2 pb-md-0 mb-md-5 px-md-2">
-                login Info
-              </h3>
-             
-             
+              <h3 className="mb-4 pb-2 pb-md-0 mb-md-5 px-md-2">login Info</h3>
+
               <MDBRow>
                 <MDBCol md="6">
                   <MDBInput
@@ -115,13 +107,7 @@ const Login = () => {
                 </MDBCol>
                 <MDBCol md="6" className="mb-4"></MDBCol>
               </MDBRow>
-             
 
-             
-                  
-                  
-              
-                  
               <MDBRow>
                 <MDBCol md="6">
                   <br></br>
@@ -131,9 +117,8 @@ const Login = () => {
                 color="success"
                 className="mb-4"
                 size="lg"
-                
                 onClick={() => {
-                  LoginFunc()
+                  LoginFunc();
                 }}
               >
                 Submit
@@ -143,7 +128,7 @@ const Login = () => {
         </MDBCol>
       </MDBRow>
     </MDBContainer>
-  )
-}
+  );
+};
 
-export default Login
+export default Login;

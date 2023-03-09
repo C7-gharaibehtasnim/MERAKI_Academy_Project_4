@@ -8,4 +8,4 @@ const appointmentSchema = new mongoose.Schema({
   time:{type:String ,required:true},
 });
 
-module.exports = mongoose.model("appointment", appointmentSchema);
+module.exports = mongoose.model("appointments", appointmentSchema);
