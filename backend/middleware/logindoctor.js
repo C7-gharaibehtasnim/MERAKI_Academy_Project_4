@@ -17,6 +17,8 @@ const loginDoctor = (req, res,next) => {
           req.body={email,password}
           next();
         }
+        else
+        {
         try {
           const valid = await bcrypt.compare(password, result.password);
           console.log(valid);
@@ -42,10 +44,12 @@ const loginDoctor = (req, res,next) => {
             success: true,
             message: `Valid login credentials`,
             token: token,
+            role:result.role.role
           });
         } catch (error) {
           throw new Error(error.message);
         }
+      }
       })
       .catch((err) => {
         res.status(500).json({

@@ -9,6 +9,7 @@ import Register from "./components/Register";
 import Login from "./components/Login";
 import Navigation from "./components/Navigation";
 import {  useNavigate } from "react-router-dom";
+import DoctorProfile from "./components/DoctorProfile";
 export const UserContext = createContext();
 function App() {
   const Navigate=useNavigate()
@@ -38,6 +39,8 @@ function App() {
         <Route path="/donate" element={<Donate />} />
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/doctor" element={<DoctorProfile />} />
+
         
         <Route
           path="*"

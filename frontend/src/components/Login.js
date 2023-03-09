@@ -21,8 +21,12 @@ const Login = () => {
     useContext(UserContext);
   const LoginFunc = () => {
     axios
-      .post("http://localhost:5000/roles/login",  login )
+      .post("http://localhost:5000/roles/login",login )
       .then((Response) => {
+        // Response.role==="patient"
+        // {
+          
+        // }
         setIsLoggedIn((current) => {
           return !current;
         });
