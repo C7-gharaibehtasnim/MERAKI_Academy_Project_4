@@ -52,7 +52,7 @@ const register = (req, res) => {
             message: `Account Created Successfully`,
             author: result,
             token: token,
-            role:response.role.role,
+          
             id:result._id
           });
         });
@@ -185,6 +185,7 @@ const veiwProfile = (req, res) => {
     .findById(id)
 
     .then((patient) => {
+      console.log("efw",patient)
       if (!patient) {
         return res.status(404).json({
           success: false,

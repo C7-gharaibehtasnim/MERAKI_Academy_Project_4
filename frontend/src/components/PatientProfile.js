@@ -1,10 +1,350 @@
-import React from 'react'
+import React, { useContext, useEffect, useState } from "react";
+import { MDBCardTitle, MDBBtn, MDBInput } from "mdb-react-ui-kit";
+import Collapse from "react-bootstrap/Collapse";
+import Dropdown from 'react-bootstrap/Dropdown';
+import Form from 'react-bootstrap/Form';
 
+import {
+  MDBCol,
+  MDBContainer,
+  MDBRow,
+  MDBCard,
+  MDBCardText,
+  MDBCardBody,
+  MDBCardImage,
+  MDBTypography,
+  MDBIcon,
+} from "mdb-react-ui-kit";
+import axios from "axios";
+import { UserContext } from "../App";
+const CustomToggle = React.forwardRef(({ children, onClick }, ref) => (
+    <a
+      href=""
+      ref={ref}
+      onClick={(e) => {
+        e.preventDefault();
+        onClick(e);
+      }}
+    >
+      {children}
+      &#x25bc;
+    </a>
+  ));
+  const CustomMenu = React.forwardRef(
+    ({ children, style, className, 'aria-labelledby': labeledBy }, ref) => {
+      const [value, setValue] = useState('');
+  
+      return (
+        <div
+          ref={ref}
+          style={style}
+          className={className}
+          aria-labelledby={labeledBy}
+        >
+          <Form.Control
+            autoFocus
+            className="mx-3 my-2 w-auto"
+            placeholder="Type to filter..."
+            onChange={(e) => setValue(e.target.value)}
+            value={value}
+          />
+          <ul className="list-unstyled">
+            {React.Children.toArray(children).filter(
+              (child) =>
+                !value || child.props.children.toLowerCase().startsWith(value),
+            )}
+          </ul>
+        </div>
+      );
+    },
+  );
 const PatientProfile = () => {
+  const [open, setOpen] = useState(false);
+
+  const [firstName, setFirstName] = useState("");
+  const [lastname, setLastname] = useState("");
+  const [email, setEmail] = useState("");
+  const [appointments, setAppointments] = useState(null);
+  const [insurance, setInsurance] = useState("");
+  const [age, setAge] = useState("");
+  const { token, userId, role,clinics } = useContext(UserContext);
+  const [newappointment, setNewappointment] = useState({})
+  // console.log(userId);
+  // console.log("line27", token);
+  useEffect(() => {
+    console.log("role", role);
+    const getinfo = () => {
+      axios
+        .get(`http://localhost:5000/patient/${userId}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        })
+        .then((Response) => {
+          console.log(Response.data.patient);
+          setFirstName(Response.data.patient.firstName);
+          setLastname(Response.data.patient.lastName);
+          setEmail(Response.data.patient.email);
+          setInsurance(Response.data.patient.insurance);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    };
+    const getappointment = () => {
+      axios
+        .get(`http://localhost:5000/patient/appointment`, {
+          headers: { Authorization: `Bearer ${token}` },
+        })
+        .then((Response) => {
+          console.log(Response.data);
+
+          setAppointments(Response.data.appointment);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    };
+    getinfo();
+    getappointment();
+  }, []);
+  const deleteAppointment = (id) => {
+    axios
+      .delete(`http://localhost:5000/appointment/delete/${id}`)
+      .then((Response) => {
+        // setDEleteResult((current) => {
+        //   current = Response.data.message;
+        // });
+        //  const result = articles.filter((appointment) => appointment._id != id);
+        // console.log(result);
+        // setarticle(result);
+        // console.log(articles);
+      })
+      .catch((err) => {
+        //setDEleteResult((current) => {
+        //current = err.response.data.message;
+      });
+  };
+
   return (
-    <div>PatientProfile</div>
-  )
-}
+    <section className="vh-100" style={{ backgroundColor: "#f4f5f7" }}>
+      <MDBContainer className="py-5 h-100">
+        <MDBRow className="justify-content-center align-items-center h-100">
+          <MDBCol lg="6" className="mb-4 mb-lg-0">
+            <MDBCard className="mb-3" style={{ borderRadius: ".5rem" }}>
+              <MDBRow className="g-0">
+                <MDBCol
+                  md="4"
+                  className="gradient-custom text-center text-white"
+                  style={{
+                    borderTopLeftRadius: ".5rem",
+                    borderBottomLeftRadius: ".5rem",
+                  }}
+                >
+                  <MDBTypography tag="h5">
+                    {"welcome " + firstName + "  " + lastname}
+                  </MDBTypography>
+                  <MDBIcon far icon="edit mb-5" />
+                  <MDBCol size="6" className="mb-3">
+                    <MDBRow className="pt-1">
+                      <MDBTypography tag="h6">{email}</MDBTypography>
+                      <MDBCardText className="text-muted">{email}</MDBCardText>
+                    </MDBRow>
+                  </MDBCol>
+                </MDBCol>
+                <MDBCardBody className="p-4">
+                  <MDBTypography
+                    tag="h6"
+                    className="myappointment"
+                    onClick={() => setOpen(!open)}
+                  >
+                    My Appointment
+                  </MDBTypography>
+                  <hr className="mt-0 mb-4" />
+                  <MDBRow className="pt-1">
+                    <MDBCol size="15" className="mb-3">
+                      {appointments &&
+                        appointments.map((Element) => {
+                            console.log(Element);
+                          return (
+                            <>
+                              <Collapse in={open}>
+                                <div
+                                  className="vh-100,expandable"
+                                  style={{
+                                    backgroundColor: "#9de2ff",
+                                    marginTop: "15px",
+                                  }}
+                                >
+                                  <MDBContainer>
+                                    <MDBRow className="justify-content-center">
+                                      <MDBCol
+                                        md="9"
+                                        lg="7"
+                                        xl="5"
+                                        className="mt-5"
+                                      >
+                                        <MDBCard
+                                          style={{ borderRadius: "15px" }}
+                                        >
+                                          <MDBCardBody className="p-4">
+                                            <div className="d-flex text-black">
+                                              <div className="flex-grow-1 ms-3">
+                                                <div
+                                                  className="d-flex justify-content-start rounded-3 p-2 mb-2"
+                                                  style={{
+                                                    backgroundColor: "#efefef",
+                                                  }}
+                                                >
+                                                  <MDBCardTitle>
+                                                    { "dfs"}
+                                                  </MDBCardTitle>
+                                                </div>
+                                                <div
+                                                  className="d-flex justify-content-start rounded-3 p-2 mb-2"
+                                                  style={{
+                                                    backgroundColor: "#efefef",
+                                                  }}
+                                                >
+                                                  <MDBCardTitle>
+                                                    {Element.doctor.firstName}
+                                                  </MDBCardTitle>
+                                                </div>
+                                                <div
+                                                  className="d-flex justify-content-start rounded-3 p-2 mb-2"
+                                                  style={{
+                                                    backgroundColor: "#efefef",
+                                                  }}
+                                                >
+                                                  <MDBCardTitle>
+                                                    {Element.date}
+                                                  </MDBCardTitle>
+                                                </div>
+                                                <div
+                                                  className="d-flex justify-content-start rounded-3 p-2 mb-2"
+                                                  style={{
+                                                    backgroundColor: "#efefef",
+                                                  }}
+                                                >
+                                                  <MDBCardTitle>
+                                                    {Element.time}
+                                                  </MDBCardTitle>
+                                                </div>
+                                                <div className="d-flex pt-1">
+                                                  <MDBBtn
+                                                    outline
+                                                    className="me-1 flex-grow-1"
+                                                  >
+                                                    delete
+                                                  </MDBBtn>
+                                                  <MDBBtn className="flex-grow-1">
+                                                    Update
+                                                  </MDBBtn>
+                                                </div>
+                                              </div>
+                                            </div>
+                                          </MDBCardBody>
+                                        </MDBCard>
+                                      </MDBCol>
+                                    </MDBRow>
+                                  </MDBContainer>
+                                </div>
+                              </Collapse>
+                            </>
+                          );
+                        })}
+                    </MDBCol>
+                  </MDBRow>
+                  <MDBTypography tag="h6"> Book An Appointment</MDBTypography>
+                  <hr className="mt-0 mb-4" />
+                  <MDBRow className="pt-1">
+                    <MDBCol size="15" className="mb-3">
+                      <div
+                        className="vh-100"
+                        style={{ backgroundColor: "#9de2ff" }}
+                      >
+                        <MDBContainer>
+                          <MDBRow className="justify-content-center">
+                            <MDBCol md="9" lg="7" xl="5" className="mt-5">
+                              <MDBCard style={{ borderRadius: "15px" }}>
+                                <MDBCardBody className="p-4">
+                                  <div className="d-flex text-black">
+                                    <div className="flex-grow-1 ms-3">
+                                      <div
+                                        className="d-flex justify-content-start rounded-3 p-2 mb-2"
+                                        style={{ backgroundColor: "#efefef" }}
+                                      >
+                                        <div>
+                                        <Dropdown >
+    <Dropdown.Toggle  as={CustomToggle} id="dropdown-custom-components">
+     Clinic Name
+    </Dropdown.Toggle>
 
-export default PatientProfile
+    <Dropdown.Menu as={CustomMenu}>
+      {clinics &&clinics.map((clinic)=>{
+       { console.log(clinic)}
+      
+      return (
+        <Dropdown.Item value={clinic._id} eventKey="1" 
+        onClick={(e)=>{ 
+            console.log(e.target.__reactProps$5mt4rfcosoy
+.value                )
+          setNewappointment((clinic) => {
+            return { ...clinic, clinic: e.target.__reactProps$5mt4rfcosoy
+.value };
+           });
+        }} >{clinic.sectionname}</Dropdown.Item>
+      )
+      })}
+      
+    </Dropdown.Menu>
+  </Dropdown>
+                                         
+                                         
+                                        </div>
+                                      
+                                       
+                                      </div>
+                                      <div className="d-flex pt-1">
+                                        <MDBBtn
+                                          outline
+                                          className="me-1 flex-grow-1"
+                                        >
+                                          Chat
+                                        </MDBBtn>
+                                        <MDBBtn className="flex-grow-1">
+                                          Follow
+                                        </MDBBtn>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </MDBCardBody>
+                              </MDBCard>
+                            </MDBCol>
+                          </MDBRow>
+                        </MDBContainer>
+                      </div>
+                      <MDBTypography tag="h6">lab Reports</MDBTypography>
+                    </MDBCol>
+                  </MDBRow>
 
+                  <MDBTypography tag="h6"> Reports</MDBTypography>
+                  <hr className="mt-0 mb-4" />
+                  <MDBRow className="pt-1">
+                    <MDBCol size="6" className="mb-3">
+                      <MDBTypography tag="h6">lab Reports</MDBTypography>
+                    </MDBCol>
+                    <MDBCol size="6" className="mb-3">
+                      <MDBTypography tag="h6">X-ray Reports</MDBTypography>
+                      <MDBCardText className="text-muted"></MDBCardText>
+                    </MDBCol>
+                  </MDBRow>
+                </MDBCardBody>
+              </MDBRow>
+            </MDBCard>
+          </MDBCol>
+        </MDBRow>
+      </MDBContainer>
+    </section>
+  );
+};
+
+export default PatientProfile;

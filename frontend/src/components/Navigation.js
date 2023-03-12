@@ -9,16 +9,19 @@ import NavDropdown from "react-bootstrap/NavDropdown";
 import { UserContext } from "../App";
 
 const Navigation = () => {
-  const {isLoggedIn}=useContext(UserContext)
+  const {isLoggedIn,role}=useContext(UserContext)
   return (
     <div>
       <Link to="/"> Home </Link>
        <Link to="/about"> About </Link>
        <Link to="/clinics"> Clinics </Link>
        <Link to="/donate"> Donate </Link>
-       <Link to="/register"> Register </Link>
-       <Link to="/login"> Login </Link>
-
+       { role=="patient" &&isLoggedIn==true && <> <Link to="/patient"> my profile </Link>   <Link to="/"> logout </Link> </>}
+       { role=="doctor" &&isLoggedIn==true && <> <Link to="/doctor"> my profile </Link>   <Link to="/"> logout </Link> </>}
+     { isLoggedIn==false &&<>
+      <Link to="/register"> Register </Link>
+       <Link to="/login"> Login </Link></>}
+       
   </div>
     // <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
     //   <Container>

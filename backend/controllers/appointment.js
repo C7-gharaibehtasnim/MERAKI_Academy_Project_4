@@ -5,13 +5,12 @@ const jwt = require("jsonwebtoken");
 const bookAnAppointment = (req, res) => {
   const patient = req.token.userId;
   console.log(patient);
-  const { date, doctor, time } = req.body;
+  const { date, doctor, time,clinic } = req.body;
 
-  const appointment = new appointmentModal({ patient, doctor, date, time });
+  const appointment = new appointmentModal({ patient, doctor, date, time,clinic });
   appointmentModal
     .findOne({ date, time, doctor })
-    .populate("patient")
-    .exec()
+   
     .then((result1) => {
       if (result1) {
         return res.status(409).json({
@@ -22,10 +21,13 @@ const bookAnAppointment = (req, res) => {
         appointment
           .save()
           .then((result) => {
+          
+            console.log("line24", result)
             res.status(201).json({
               success: true,
               message: `Appointment Booked Successfully`,
               appointment: result,
+             
             });
           })
           .catch((err) => {
@@ -40,12 +42,16 @@ const bookAnAppointment = (req, res) => {
 };
 const getAppointmentBypatientID = (req, res) => {
   const id = req.token.userId;
+  let doctorName
+  let clinicName
 
   console.log(req.token.role.role);
   appointmentModal
     .find({ patient: id })
+    .populate("doctor","firstName -_id").populate("clinic","sectionname -_id").exec()
 
     .then((appointment) => {
+  console.log(appointment)
       if (!appointment) {
         return res.status(404).json({
           success: false,
@@ -56,8 +62,10 @@ const getAppointmentBypatientID = (req, res) => {
         success: true,
         message: `The appointments ${id} `,
         appointment: appointment,
-      });
-    })
+        
+       
+      })})
+   
     .catch((err) => {
       res.status(500).json({
         success: false,

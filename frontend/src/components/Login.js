@@ -25,15 +25,19 @@ const Login = () => {
     token,
     setToken,
     setuserid,
+    setRole
   } = useContext(UserContext);
   const LoginFunc = () => {
     axios
       .post("http://localhost:5000/roles/login", login)
       .then((Response) => {
-        console.log(Response.data.role);
+        //console.log(Response.data.role);
 
         setIsLoggedIn((current) => {
           return !current;
+        });
+        setRole((current) => {
+          return (current = Response.data.role);
         });
         setToken((current) => {
           return (current = Response.data.token);
@@ -41,7 +45,7 @@ const Login = () => {
         setuserid((current) => {
           return (current = Response.data.id);
         });
-        console.log(Response.data);
+       // console.log(Response.data);
         localStorage.setItem("token", Response.data.token);
         localStorage.setItem("userId", Response.data.id);
 
@@ -54,7 +58,7 @@ const Login = () => {
         if (Response.data.role === "admin") {
           Navigate("/admin");
         }
-        console.log(Response.data);
+        //console.log(Response.data);
       })
       .catch((err) => {
         setLoginError(err.response.data.message);

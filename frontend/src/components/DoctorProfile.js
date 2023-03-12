@@ -30,7 +30,7 @@ const DoctorProfile = () => {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((Response) => {
-        console.log(Response.data.doctor.appointments);
+        console.log(Response.data);
         setImage(Response.data.doctor.image);
         setFirstName(Response.data.doctor.firstName);
          setLastname(Response.data.doctor.lastName);

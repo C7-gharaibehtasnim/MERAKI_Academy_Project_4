@@ -1,7 +1,7 @@
 const clinicModal = require("../models/clinicSchema");
 const newclinic = (req, res) => {
-  const { sectionname, doctor } = req.body;
-  const clinic = new clinicModal({ sectionname, doctor });
+  const { sectionname, doctor,image } = req.body;
+  const clinic = new clinicModal({ sectionname, doctor,image });
   clinic
     .save()
     .then((result) => {

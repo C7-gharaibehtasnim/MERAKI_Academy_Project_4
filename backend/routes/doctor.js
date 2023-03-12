@@ -5,6 +5,7 @@ const authentication = require("../middleware/authentication");
 const { getAppointmentBydoctorID } = require("../controllers/appointment");
 const {
   register,
+  veiwdoctorsbyclinicid,
   //login,
   updateprofile,
   addDoctor,
@@ -41,6 +42,11 @@ doctorRouter.put(
   authentication,
   authorization("UPDATE_PROFILE"),
   updateprofile
+);
+doctorRouter.get(
+  "/clinic/:id",
+  
+  veiwdoctorsbyclinicid
 );
 
 module.exports = doctorRouter;

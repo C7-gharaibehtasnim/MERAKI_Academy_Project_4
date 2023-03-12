@@ -14,14 +14,15 @@ import PatientProfile from "./components/PatientProfile";
 import Adminprofile from "./components/Adminprofile";
 import 'mdb-react-ui-kit/dist/css/mdb.min.css';
 import "rsuite/dist/rsuite.css";
-
+import axios from "axios";
 export const UserContext = createContext();
 function App() {
   const Navigate=useNavigate()
   const [userId, setuserid] = useState(localStorage.getItem("userId"));
   const [login, setLogin] = useState({ email: "hi", password: "hello" });
   const [token, setToken] = useState(localStorage.getItem("token"));
- console.log(token)
+const [clinics, setClinics] = useState(null)
+  console.log(token)
  useEffect(()=>{
   if(token)
   {
@@ -29,10 +30,28 @@ function App() {
     //Navigate("/")
   }
  },[token])
+
+ useEffect(() => {
+  // console.log("role", role);
+  
+     axios
+       .get(`http://localhost:5000/clinic`)
+     
+       .then((Response) => {
+         console.log(Response.data.clinic)
+         setClinics(Response.data.clinic)
+         
+       })
+       .catch((err) => {
+         console.log(err);
+       });
+     },[])
+
+
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [role, setRole ] = useState("")
   return (
-    <UserContext.Provider value={{role, setRole ,userId,setuserid,login, setLogin, isLoggedIn, setIsLoggedIn, token, setToken}}>
+    <UserContext.Provider value={{setClinics,clinics,role, setRole ,userId,setuserid,login, setLogin, isLoggedIn, setIsLoggedIn, token, setToken}}>
     <div className="App">
       <header className="App-header">
         <h1>Project 4 </h1>

@@ -51,7 +51,7 @@ console.log(req.body);
       
        
        token:token,
-       role:result.role.role,
+      
        id: result._id,
              });
    })
@@ -202,9 +202,42 @@ const veiwProfile=(req,res)=>{
       });
     });
 }
+const veiwdoctorsbyclinicid=(req,res)=>{
+  const id = req.params.id;
+ 
+
+  console.log(id);
+  doctorModel
+    .find({ clinic: id })
+    //.populate("doctor","firstName -_id").populate("clinic","sectionname -_id").exec()
+
+    .then((doctor) => {
+  console.log(doctor)
+      if (!doctor) {
+        return res.status(404).json({
+          success: false,
+          message: `you have n`,
+        });
+      }
+      res.status(200).json({
+        success: true,
+        message: `The appointments ${id} `,
+        doctor: doctor,
+        
+       
+      })})
+   
+    .catch((err) => {
+      res.status(500).json({
+        success: false,
+        message: `Server Error`,
+        err: err.message,
+      });
+    });
+}
 module.exports = {
   register,
- 
+ veiwdoctorsbyclinicid,
   updateprofile,
   addDoctor,
   deleteDoctor,
