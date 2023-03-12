@@ -158,6 +158,7 @@ const UpdateAppoitment = (req, res) => {
       });
     });
 };
+
 module.exports = {
   bookAnAppointment,
   getAppointmentBypatientID,

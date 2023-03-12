@@ -28,10 +28,10 @@ const register = (req, res) => {
   patient
     .save()
     .then((result) => {
-      //console.log(result)
-      //console.log(result._id)
+      console.log("sfss", result)
+      console.log("sgfsg", result._id)
       patientModel
-        .find({ role })
+        .findOne({ _id:result._id })
         .populate("role")
         .exec()
         .then((response) => {
@@ -46,13 +46,13 @@ const register = (req, res) => {
             expiresIn: "24h",
           };
           const token = genrateToken(payload, options);
-
+const x=response
+console.log(x);
           res.status(201).json({
             success: true,
             message: `Account Created Successfully`,
-            author: result,
             token: token,
-          
+            role:response.role.role,
             id:result._id
           });
         });

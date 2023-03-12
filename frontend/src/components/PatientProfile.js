@@ -1,9 +1,9 @@
 import React, { useContext, useEffect, useState } from "react";
 import { MDBCardTitle, MDBBtn, MDBInput } from "mdb-react-ui-kit";
 import Collapse from "react-bootstrap/Collapse";
-import Dropdown from 'react-bootstrap/Dropdown';
-import Form from 'react-bootstrap/Form';
-
+import Dropdown from "react-bootstrap/Dropdown";
+import Form from "react-bootstrap/Form";
+import "react-datepicker/dist/react-datepicker.css";
 import {
   MDBCol,
   MDBContainer,
@@ -17,47 +17,48 @@ import {
 } from "mdb-react-ui-kit";
 import axios from "axios";
 import { UserContext } from "../App";
+import DatePicker from "react-datepicker";
 const CustomToggle = React.forwardRef(({ children, onClick }, ref) => (
-    <a
-      href=""
-      ref={ref}
-      onClick={(e) => {
-        e.preventDefault();
-        onClick(e);
-      }}
-    >
-      {children}
-      &#x25bc;
-    </a>
-  ));
-  const CustomMenu = React.forwardRef(
-    ({ children, style, className, 'aria-labelledby': labeledBy }, ref) => {
-      const [value, setValue] = useState('');
-  
-      return (
-        <div
-          ref={ref}
-          style={style}
-          className={className}
-          aria-labelledby={labeledBy}
-        >
-          <Form.Control
-            autoFocus
-            className="mx-3 my-2 w-auto"
-            placeholder="Type to filter..."
-            onChange={(e) => setValue(e.target.value)}
-            value={value}
-          />
-          <ul className="list-unstyled">
-            {React.Children.toArray(children).filter(
-              (child) =>
-                !value || child.props.children.toLowerCase().startsWith(value),
-            )}
-          </ul>
-        </div>
-      );
-    },
-  );
+  <a
+    href=""
+    ref={ref}
+    onClick={(e) => {
+      e.preventDefault();
+      onClick(e);
+    }}
+  >
+    {children}
+    &#x25bc;
+  </a>
+));
+const CustomMenu = React.forwardRef(
+  ({ children, style, className, "aria-labelledby": labeledBy }, ref) => {
+    const [value, setValue] = useState("");
+
+    return (
+      <div
+        ref={ref}
+        style={style}
+        className={className}
+        aria-labelledby={labeledBy}
+      >
+        <Form.Control
+          autoFocus
+          className="mx-3 my-2 w-auto"
+          placeholder="Type to filter..."
+          onChange={(e) => setValue(e.target.value)}
+          value={value}
+        />
+        <ul className="list-unstyled">
+          {React.Children.toArray(children).filter(
+            (child) =>
+              !value || child.props.children.toLowerCase().startsWith(value)
+          )}
+        </ul>
+      </div>
+    );
+  }
+);
 const PatientProfile = () => {
   const [open, setOpen] = useState(false);
 
@@ -67,8 +68,9 @@ const PatientProfile = () => {
   const [appointments, setAppointments] = useState(null);
   const [insurance, setInsurance] = useState("");
   const [age, setAge] = useState("");
-  const { token, userId, role,clinics } = useContext(UserContext);
-  const [newappointment, setNewappointment] = useState({})
+  const { token, userId, role, clinics } = useContext(UserContext);
+  const [newappointment, setNewappointment] = useState({});
+  const [clinicdoctors, setClinicdoctors] = useState(null);
   // console.log(userId);
   // console.log("line27", token);
   useEffect(() => {
@@ -103,6 +105,7 @@ const PatientProfile = () => {
           console.log(err);
         });
     };
+
     getinfo();
     getappointment();
   }, []);
@@ -123,7 +126,19 @@ const PatientProfile = () => {
         //current = err.response.data.message;
       });
   };
-
+  const getDoctorsForChoosenClinic = (value) => {
+    console.log();
+    // const value = newappointment.clinic;
+    axios
+      .get(`http://localhost:5000/doctor/clinic/${value}`)
+      .then((Response) => {
+        console.log(Response.data.doctor);
+        setClinicdoctors(Response.data.doctor);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
   return (
     <section className="vh-100" style={{ backgroundColor: "#f4f5f7" }}>
       <MDBContainer className="py-5 h-100">
@@ -163,7 +178,7 @@ const PatientProfile = () => {
                     <MDBCol size="15" className="mb-3">
                       {appointments &&
                         appointments.map((Element) => {
-                            console.log(Element);
+                          console.log(Element);
                           return (
                             <>
                               <Collapse in={open}>
@@ -195,7 +210,7 @@ const PatientProfile = () => {
                                                   }}
                                                 >
                                                   <MDBCardTitle>
-                                                    { "dfs"}
+                                                    {"dfs"}
                                                   </MDBCardTitle>
                                                 </div>
                                                 <div
@@ -273,45 +288,211 @@ const PatientProfile = () => {
                                         style={{ backgroundColor: "#efefef" }}
                                       >
                                         <div>
-                                        <Dropdown >
-    <Dropdown.Toggle  as={CustomToggle} id="dropdown-custom-components">
-     Clinic Name
-    </Dropdown.Toggle>
+                                          <Dropdown>
+                                            <Dropdown.Toggle
+                                              as={CustomToggle}
+                                              id="dropdown-custom-components"
+                                            >
+                                              Clinic Name
+                                            </Dropdown.Toggle>
 
-    <Dropdown.Menu as={CustomMenu}>
-      {clinics &&clinics.map((clinic)=>{
-       { console.log(clinic)}
-      
-      return (
-        <Dropdown.Item value={clinic._id} eventKey="1" 
-        onClick={(e)=>{ 
-            console.log(e.target.__reactProps$5mt4rfcosoy
-.value                )
-          setNewappointment((clinic) => {
-            return { ...clinic, clinic: e.target.__reactProps$5mt4rfcosoy
-.value };
-           });
-        }} >{clinic.sectionname}</Dropdown.Item>
-      )
-      })}
-      
-    </Dropdown.Menu>
-  </Dropdown>
-                                         
-                                         
+                                            <Dropdown.Menu as={CustomMenu}>
+                                              {clinics &&
+                                                clinics.map((clinic) => {
+                                                  {
+                                                    console.log(clinic);
+                                                  }
+
+                                                  return (
+                                                    <Dropdown.Item
+                                                      value={clinic._id}
+                                                      eventKey="1"
+                                                      onClick={(e) => {
+                                                        getDoctorsForChoosenClinic(
+                                                          e.target.attributes
+                                                            .value.value
+                                                        );
+                                                        setNewappointment({
+                                                          clinic:
+                                                            e.target.attributes
+                                                              .value.value,
+                                                        });
+                                                      }}
+                                                    >
+                                                      {clinic.sectionname}
+                                                    </Dropdown.Item>
+                                                  );
+                                                })}
+                                            </Dropdown.Menu>
+                                          </Dropdown>
                                         </div>
-                                      
-                                       
                                       </div>
+
+                                      <div
+                                        className="d-flex justify-content-start rounded-3 p-2 mb-2"
+                                        style={{ backgroundColor: "#efefef" }}
+                                      >
+                                        <div>
+                                          <Dropdown>
+                                            <Dropdown.Toggle
+                                              as={CustomToggle}
+                                              id="dropdown-custom-components"
+                                            >
+                                              Doctors
+                                            </Dropdown.Toggle>
+
+                                            <Dropdown.Menu as={CustomMenu}>
+                                              {clinicdoctors &&
+                                                clinicdoctors.map((doctor) => {
+                                                  {
+                                                    console.log(doctor);
+                                                  }
+
+                                                  return (
+                                                    <Dropdown.Item
+                                                      value={doctor._id}
+                                                      eventKey="1"
+                                                      onClick={(e) => {
+                                                        console.log(
+                                                          e.target.attributes
+                                                            .value.value
+                                                        );
+
+                                                        setNewappointment(
+                                                          (value) => {
+                                                            return {
+                                                              ...value.clinic,
+                                                              doctor:
+                                                                e.target
+                                                                  .attributes
+                                                                  .value.value,
+                                                            };
+                                                          }
+                                                        );
+                                                      }}
+                                                    >
+                                                      {doctor.firstName +
+                                                        "  " +
+                                                        doctor.lastName}
+                                                    </Dropdown.Item>
+                                                  );
+                                                })}
+                                            </Dropdown.Menu>
+                                          </Dropdown>
+                                        </div>
+                                      </div>
+
+                                      <div
+                                        className="d-flex justify-content-start rounded-3 p-2 mb-2"
+                                        style={{ backgroundColor: "#efefef" }}
+                                      >
+                                        <div>
+                                          <input
+                                            type="date"
+                                            onChange={(e) => {
+                                              console.log(e);
+                                              setNewappointment((value) => {
+                                                return {
+                                                  ...value.clinic,
+                                                  ...value.doctor,
+                                                  date: e,
+                                                };
+                                              });
+                                            }}
+                                          />
+                                        </div>
+                                      </div>
+                                      <div
+                                        className="d-flex justify-content-start rounded-3 p-2 mb-2"
+                                        style={{ backgroundColor: "#efefef" }}
+                                      >
+                                        <div>
+                                          <select name="cars" id="cars">
+                                            <option
+                                              value="volvo"
+                                              onClick={(e) => {
+                                                console.log(e.target.value);
+                                                setNewappointment((value) => {
+                                                  return {
+                                                    ...value.clinic,
+                                                    ...value.doctor,
+                                                    ...value.date,
+                                                    time: e.target.value,
+                                                  };
+                                                });
+                                              }}
+                                            >
+                                              8-9am
+                                            </option>
+                                            <option value="saab"   onClick={(e) => {
+                                                console.log(e.target.value);
+                                                setNewappointment((value) => {
+                                                  return {
+                                                    ...value.clinic,
+                                                    ...value.doctor,
+                                                    ...value.date,
+                                                    time: e.target.value,
+                                                  };
+                                                });
+                                              }}>9-10am
+                                          
+                                            </option>
+                                            <option value="opel"   onClick={(e) => {
+                                                console.log(e.target.value);
+                                                setNewappointment((value) => {
+                                                  return {
+                                                    ...value.clinic,
+                                                    ...value.doctor,
+                                                    ...value.date,
+                                                    time: e.target.value,
+                                                  };
+                                                });
+                                              }}>
+                                              10-11am
+                                            </option>
+                                            <option value="audi"   onClick={(e) => {
+                                                console.log(e.target.value);
+                                                setNewappointment((value) => {
+                                                  return {
+                                                    ...value.clinic,
+                                                    ...value.doctor,
+                                                    ...value.date,
+                                                    time: e.target.value,
+                                                  };
+                                                });
+                                              }}>
+                                              11-12pm
+                                            </option>
+                                            <option value="audi"   onClick={(e) => {
+                                                console.log(e.target.value);
+                                                setNewappointment((value) => {
+                                                  return {
+                                                    ...value.clinic,
+                                                    ...value.doctor,
+                                                    ...value.date,
+                                                    time: e.target.value,
+                                                  };
+                                                });
+                                              }}>12-1pm</option>
+                                            <option value="audi"   onClick={(e) => {
+                                                console.log(e.target.value);
+                                                setNewappointment((value) => {
+                                                  return {
+                                                    ...value.clinic,
+                                                    ...value.doctor,
+                                                    ...value.date,
+                                                    time: e.target.value,
+                                                  };
+                                                });
+                                              }}>1-2pm</option>
+                                          </select>
+                                        </div>
+                                      </div>
+
                                       <div className="d-flex pt-1">
-                                        <MDBBtn
-                                          outline
-                                          className="me-1 flex-grow-1"
-                                        >
-                                          Chat
-                                        </MDBBtn>
+                                      
                                         <MDBBtn className="flex-grow-1">
-                                          Follow
+                                          Book
                                         </MDBBtn>
                                       </div>
                                     </div>

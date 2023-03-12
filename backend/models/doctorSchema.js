@@ -13,7 +13,7 @@ password:{type:String,minlength:8, required:true,trim:true} ,
 appointments: [{ type: mongoose.Schema.Types.ObjectId, ref: "appointments" }],
 clinic: { type: mongoose.Schema.Types.ObjectId, ref: "clinic" },
 role:{type: mongoose.Schema.Types.ObjectId, ref: "Role" },
-
+pref:{type:String}
 });
 
 doctorSchema.pre("save", async function () {

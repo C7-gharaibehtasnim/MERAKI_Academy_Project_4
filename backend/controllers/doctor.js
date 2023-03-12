@@ -14,6 +14,7 @@ const register = (req, res) => {
     appointments,
     clinic,
     role,
+    pref
   } = req.body;
   const doctor = new doctorModel({
     image,
@@ -25,6 +26,7 @@ const register = (req, res) => {
     appointments,
     clinic,
     role,
+    pref
   });
 console.log(req.body);
   doctor
@@ -42,14 +44,14 @@ console.log(req.body);
       const options = {
         expiresIn: "24h",
       };
-      console.log("43",payload)
+      console.log("43",response.role.role)
      const token= genrateToken(payload,options)
      
      res.status(201).json({
        success: true,
        message: `Account Created Successfully`,
       
-       
+       role:response.role.role,
        token:token,
       
        id: result._id,
@@ -235,11 +237,21 @@ const veiwdoctorsbyclinicid=(req,res)=>{
       });
     });
 }
+const checkDate =(req,res)=>{
+  const id=req.params.id
+  const {time,date}=req.body.date
+
+  doctorModel
+  .findOne({ _id: id },{time:time},{date:date}).then((result)=>{
+
+  })
+
+}
 module.exports = {
   register,
  veiwdoctorsbyclinicid,
   updateprofile,
   addDoctor,
   deleteDoctor,
-  veiwProfile
+  veiwProfile,checkDate
 };

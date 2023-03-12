@@ -21,24 +21,46 @@ const DoctorProfile = () => {
   const [clinic, setClinic] = useState("");
   const [email, setEmail] = useState("");
   const [appointments, setAppointments] = useState(null);
-  const { token, userId } = useContext(UserContext);
-  // console.log(userId);
-  // console.log("line27", token);
+  const { token, userId,role,setIsLoggedIn } = useContext(UserContext);
+ const [pref, setPref] = useState("")
+
   useEffect(() => {
-    axios
-      .get(`http://localhost:5000/doctor/${userId}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      })
-      .then((Response) => {
-        console.log(Response.data);
-        setImage(Response.data.doctor.image);
-        setFirstName(Response.data.doctor.firstName);
-         setLastname(Response.data.doctor.lastName);
-        setEmail(Response.data.doctor.email);
-        setClinic(Response.data.doctor.clinic);
-         setAppointments(Response.data.doctor.appointments);
-      })
-      .catch((err) => {console.log(err)});
+   
+
+    const getinfo = () => {
+      axios
+        .get(`http://localhost:5000/doctor/${userId}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        })
+        .then((Response) => {
+          console.log(Response.data.doctor);
+          setFirstName(Response.data.doctor.firstName);
+          setLastname(Response.data.doctor.lastName);
+          setEmail(Response.data.doctor.email);
+          setImage(Response.data.doctor.image)
+          setClinic(Response.data.doctor.clinic.sectionname)
+        setPref(Response.data.doctor.pref)
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    };
+    const getappointment = () => {
+      axios
+        .get(`http://localhost:5000/doctor/appointment`, {
+          headers: { Authorization: `Bearer ${token}` },
+        })
+        .then((Response) => {
+          console.log(Response.data);
+
+          setAppointments(Response.data.appointment);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    };
+    getinfo();
+    getappointment();
   }, []);
 
   return (
@@ -68,6 +90,7 @@ const DoctorProfile = () => {
                     
                   </MDBTypography>
                   <MDBCardText>{clinic}</MDBCardText>
+                  <MDBCardText>{pref}</MDBCardText>
                   <MDBIcon far icon="edit mb-5" />
                   <MDBCol size="6" className="mb-3">
                   <MDBRow className="pt-1">
@@ -100,7 +123,7 @@ const DoctorProfile = () => {
                     <MDBRow className="pt-1">
                       <MDBCol size="6" className="mb-3">
                         <MDBTypography tag="h6">Email</MDBTypography>
-                        <DateRangePicker />
+                        <DateRangePicker render={<label/>} />
                         
                       </MDBCol>
                       <MDBCol size="6" className="mb-3">

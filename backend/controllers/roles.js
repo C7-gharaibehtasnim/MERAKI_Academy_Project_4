@@ -28,8 +28,8 @@ const getrolebyrolename=(req,res)=>{
     .find({})
 
     .then((role) => {
-     
-      res.status(200).json({
+     console.log(role)
+    res.status(200).json({
         success: true,
         message: `The role  `,
         role: role,

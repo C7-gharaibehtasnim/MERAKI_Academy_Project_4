@@ -10,7 +10,7 @@ const {
   updateprofile,
   addDoctor,
   deleteDoctor,
-  veiwProfile,
+  veiwProfile,checkDate
 } = require("../controllers/doctor");
 const authorization = require("../middleware/authorization");
 const { genrateToken } = require("../controllers/config");
@@ -45,6 +45,11 @@ doctorRouter.put(
 );
 doctorRouter.get(
   "/clinic/:id",
+  
+  veiwdoctorsbyclinicid
+);
+doctorRouter.get(
+  "/check/:id",
   
   veiwdoctorsbyclinicid
 );
