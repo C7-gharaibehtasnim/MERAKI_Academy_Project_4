@@ -61,7 +61,7 @@ const CustomMenu = React.forwardRef(
 );
 const PatientProfile = () => {
   const [open, setOpen] = useState(false);
-
+const [booking,setbooking]=useState(false)
   const [firstName, setFirstName] = useState("");
   const [lastname, setLastname] = useState("");
   const [email, setEmail] = useState("");
@@ -111,8 +111,13 @@ const PatientProfile = () => {
   }, []);
   const deleteAppointment = (id) => {
     axios
-      .delete(`http://localhost:5000/appointment/delete/${id}`)
+      .delete(`http://localhost:5000/appointment/delete/${id}`,{
+        headers: { Authorization: `Bearer ${token}` },
+      })
       .then((Response) => {
+        const result = appointments.filter((appointment) => appointment._id != id);
+        // console.log(result);
+        setAppointments(result);
         // setDEleteResult((current) => {
         //   current = Response.data.message;
         // });
@@ -137,6 +142,18 @@ const PatientProfile = () => {
       })
       .catch((err) => {
         console.log(err);
+      });
+  };
+  const checkTimeAndDate = (time) => {
+    const x = newappointment.doctor;
+
+    axios
+      .get(`http://localhost:5000/doctor/check/${x}`, {
+        date: newappointment.date,
+        time: time,
+      })
+      .then((result) => {
+        console.log(result);
       });
   };
   return (
@@ -177,6 +194,7 @@ const PatientProfile = () => {
                   <MDBRow className="pt-1">
                     <MDBCol size="15" className="mb-3">
                       {appointments &&
+                    
                         appointments.map((Element) => {
                           console.log(Element);
                           return (
@@ -203,6 +221,7 @@ const PatientProfile = () => {
                                           <MDBCardBody className="p-4">
                                             <div className="d-flex text-black">
                                               <div className="flex-grow-1 ms-3">
+                                           
                                                 <div
                                                   className="d-flex justify-content-start rounded-3 p-2 mb-2"
                                                   style={{
@@ -210,7 +229,7 @@ const PatientProfile = () => {
                                                   }}
                                                 >
                                                   <MDBCardTitle>
-                                                    {"dfs"}
+     Doctor Name:{ " "}                                               {Element.doctor.firstName }{" "}{Element.doctor.lastName }
                                                   </MDBCardTitle>
                                                 </div>
                                                 <div
@@ -220,7 +239,7 @@ const PatientProfile = () => {
                                                   }}
                                                 >
                                                   <MDBCardTitle>
-                                                    {Element.doctor.firstName}
+                                                    Date: {Element.date}
                                                   </MDBCardTitle>
                                                 </div>
                                                 <div
@@ -230,23 +249,14 @@ const PatientProfile = () => {
                                                   }}
                                                 >
                                                   <MDBCardTitle>
-                                                    {Element.date}
-                                                  </MDBCardTitle>
-                                                </div>
-                                                <div
-                                                  className="d-flex justify-content-start rounded-3 p-2 mb-2"
-                                                  style={{
-                                                    backgroundColor: "#efefef",
-                                                  }}
-                                                >
-                                                  <MDBCardTitle>
-                                                    {Element.time}
+                                                    Time: {Element.time}
                                                   </MDBCardTitle>
                                                 </div>
                                                 <div className="d-flex pt-1">
                                                   <MDBBtn
                                                     outline
                                                     className="me-1 flex-grow-1"
+onClick={deleteAppointment(Element._id)}
                                                   >
                                                     delete
                                                   </MDBBtn>
@@ -268,10 +278,11 @@ const PatientProfile = () => {
                         })}
                     </MDBCol>
                   </MDBRow>
-                  <MDBTypography tag="h6"> Book An Appointment</MDBTypography>
+                  <MDBTypography tag="h6" className="myappointment"  onClick={() => setbooking(!booking)}> Book An Appointment</MDBTypography>
                   <hr className="mt-0 mb-4" />
                   <MDBRow className="pt-1">
                     <MDBCol size="15" className="mb-3">
+                    <Collapse in={booking}>
                       <div
                         className="vh-100"
                         style={{ backgroundColor: "#9de2ff" }}
@@ -407,94 +418,34 @@ const PatientProfile = () => {
                                         style={{ backgroundColor: "#efefef" }}
                                       >
                                         <div>
-                                          <select name="cars" id="cars">
-                                            <option
-                                              value="volvo"
-                                              onClick={(e) => {
-                                                console.log(e.target.value);
-                                                setNewappointment((value) => {
-                                                  return {
-                                                    ...value.clinic,
-                                                    ...value.doctor,
-                                                    ...value.date,
-                                                    time: e.target.value,
-                                                  };
-                                                });
-                                              }}
-                                            >
-                                              8-9am
-                                            </option>
-                                            <option value="saab"   onClick={(e) => {
-                                                console.log(e.target.value);
-                                                setNewappointment((value) => {
-                                                  return {
-                                                    ...value.clinic,
-                                                    ...value.doctor,
-                                                    ...value.date,
-                                                    time: e.target.value,
-                                                  };
-                                                });
-                                              }}>9-10am
-                                          
-                                            </option>
-                                            <option value="opel"   onClick={(e) => {
-                                                console.log(e.target.value);
-                                                setNewappointment((value) => {
-                                                  return {
-                                                    ...value.clinic,
-                                                    ...value.doctor,
-                                                    ...value.date,
-                                                    time: e.target.value,
-                                                  };
-                                                });
-                                              }}>
+                                          <select
+                                            name="date"
+                                            id="date"
+                                            onChange={(e) => {
+                                              checkTimeAndDate(e.target.value);
+                                            }}
+                                          >
+                                            <option value="8-9">8-9am</option>
+                                            <option value="9-10">9-10am</option>
+                                            <option value="10-11">
                                               10-11am
                                             </option>
-                                            <option value="audi"   onClick={(e) => {
-                                                console.log(e.target.value);
-                                                setNewappointment((value) => {
-                                                  return {
-                                                    ...value.clinic,
-                                                    ...value.doctor,
-                                                    ...value.date,
-                                                    time: e.target.value,
-                                                  };
-                                                });
-                                              }}>
+                                            <option value="11-12">
                                               11-12pm
                                             </option>
-                                            <option value="audi"   onClick={(e) => {
-                                                console.log(e.target.value);
-                                                setNewappointment((value) => {
-                                                  return {
-                                                    ...value.clinic,
-                                                    ...value.doctor,
-                                                    ...value.date,
-                                                    time: e.target.value,
-                                                  };
-                                                });
-                                              }}>12-1pm</option>
-                                            <option value="audi"   onClick={(e) => {
-                                                console.log(e.target.value);
-                                                setNewappointment((value) => {
-                                                  return {
-                                                    ...value.clinic,
-                                                    ...value.doctor,
-                                                    ...value.date,
-                                                    time: e.target.value,
-                                                  };
-                                                });
-                                              }}>1-2pm</option>
+                                            <option value="12-1">12-1pm</option>
+                                            <option value="1-2">1-2pm</option>
                                           </select>
                                         </div>
                                       </div>
 
                                       <div className="d-flex pt-1">
-                                      
                                         <MDBBtn className="flex-grow-1">
                                           Book
                                         </MDBBtn>
+                                       
                                       </div>
+                                      
                                     </div>
                                   </div>
                                 </MDBCardBody>
@@ -503,6 +454,7 @@ const PatientProfile = () => {
                           </MDBRow>
                         </MDBContainer>
                       </div>
+                      </Collapse>
                       <MDBTypography tag="h6">lab Reports</MDBTypography>
                     </MDBCol>
                   </MDBRow>

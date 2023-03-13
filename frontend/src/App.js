@@ -49,7 +49,7 @@ const [clinics, setClinics] = useState(null)
 
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [role, setRole ] = useState("")
+  const [role, setRole ] = useState(localStorage.getItem("role"))
   return (
     <UserContext.Provider value={{setClinics,clinics,role, setRole ,userId,setuserid,login, setLogin, isLoggedIn, setIsLoggedIn, token, setToken}}>
     <div className="App">

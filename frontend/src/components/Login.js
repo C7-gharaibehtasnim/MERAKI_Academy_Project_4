@@ -48,6 +48,8 @@ const Login = () => {
        // console.log(Response.data);
         localStorage.setItem("token", Response.data.token);
         localStorage.setItem("userId", Response.data.id);
+        localStorage.setItem("role", Response.data.role);
+        localStorage.setItem("isLoggedIn", Response.data.role);
 
         if (Response.data.role === "patient") {
           Navigate("/patient");
