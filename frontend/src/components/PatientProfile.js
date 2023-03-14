@@ -73,6 +73,7 @@ const PatientProfile = () => {
   const [clinicdoctors, setClinicdoctors] = useState(null);
   const [avilable, setAvilable] = useState("");
   const[diable,setDisable]=useState(false)
+  const [bookresult,setBookResult]=useState("")
   useEffect(() => {
     const getinfo = () => {
       axios
@@ -154,7 +155,8 @@ const PatientProfile = () => {
     { headers: { Authorization: `Bearer ${token}` } }
   )
   .then((response) => {
-     console.log(response.data.message);
+     console.log(response.data);
+     setBookResult(response.data.message)
   })
   .catch((err) => {
     console.log(err);
@@ -172,6 +174,7 @@ console.log(newappointment)
       .then((result) => {
         console.log(result.data);
         setAvilable(result.data.message);
+
         setNewappointment(
           (current) => {
             return {
@@ -183,6 +186,9 @@ console.log(newappointment)
         }
       });
   };
+  const updateApointment=(id)=>{
+    
+  }
   return (
     <section className="vh-100" style={{ backgroundColor: "#f4f5f7" }}>
       <MDBContainer className="py-5 h-100">
@@ -198,15 +204,15 @@ console.log(newappointment)
                     borderBottomLeftRadius: ".5rem",
                   }}
                 >
-                   <MDBTypography tag="h5">
+                   <MDBTypography tag="h4">
                    welcome
                   </MDBTypography>
-                  <MDBTypography tag="h5">
+                  <MDBTypography tag="h6">
                     { firstName + "  " + lastname}
                   </MDBTypography>
                   <MDBCol size="6" className="mb-3">
                     <MDBRow className="pt-1">
-                      <MDBTypography tag="h6">{email}</MDBTypography>
+                      <MDBTypography tag="h7">{email}</MDBTypography>
                      
                     </MDBRow>
                   </MDBCol>
@@ -222,9 +228,10 @@ console.log(newappointment)
                   <hr className="mt-0 mb-4" />
                   <MDBRow className="pt-1">
                     <MDBCol size="15" className="mb-3">
+{                    console.log(appointments)}
+                     
                       {appointments &&
                         appointments.map((Element) => {
-                          //console.log(Element);
                           return (
                             <>
                               <Collapse in={open}>
@@ -285,9 +292,7 @@ console.log(newappointment)
                                                   <MDBBtn
                                                     outline
                                                     className="me-1 flex-grow-1"
-                                                    onClick={deleteAppointment(
-                                                      Element._id
-                                                    )}
+                                                    onClick={()=>{deleteAppointment(Element._id)}}
                                                   >
                                                     delete
                                                   </MDBBtn>
@@ -499,6 +504,17 @@ console.log(newappointment)
                                         >
                                           <div>
                                             <p>{avilable}</p>
+                                          </div>
+                                        </div>
+                                        </> }
+                                        {bookresult&&
+                                        <>
+                                        <div
+                                          className="d-flex justify-content-start rounded-3 p-2 mb-2"
+                                          style={{ backgroundColor: "#efefef" }}
+                                        >
+                                          <div>
+                                            <p>{bookresult}</p>
                                           </div>
                                         </div>
                                         </> }

@@ -4,7 +4,7 @@ const jwt = require("jsonwebtoken");
 
 const bookAnAppointment = (req, res) => {
   const patient = req.token.userId;
-  console.log(patient);
+  console.log("patientid",patient);
   const { date, doctor, time,clinic } = req.body;
 console.log( date, doctor, time,clinic)
   const appointment = new appointmentModal({ patient, doctor, date, time,clinic });
