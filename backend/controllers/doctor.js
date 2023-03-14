@@ -211,7 +211,7 @@ const veiwdoctorsbyclinicid=(req,res)=>{
   console.log(id);
   doctorModel
     .find({ clinic: id })
-    //.populate("doctor","firstName -_id").populate("clinic","sectionname -_id").exec()
+    .populate("doctor","firstName -_id").populate("clinic","sectionname -_id").exec()
 
     .then((doctor) => {
   console.log(doctor)

@@ -32,3 +32,21 @@ body{
  .expandable:target {
   transform: scaleY(1);
 }
+.popup{
+  
+  width: 50%;
+  border-radius: 15px;
+  top: 50%;
+  background-color:rgb(173, 155, 106) ;
+
+  padding: 12px;
+  text-align: center;
+  position:sticky;
+  margin: 10px;
+  z-index: 1;
+ 
+
+}
+.Update {justify-content: center;padding: 5px;  margin-top: -15px;margin-right: 930px;}
+.popup input{  margin-left: 60px;margin-top: -60;width: 60%;height: 30px;}
+.popup textarea{  margin-left: 60px;margin-top: 5px;width: 60%;height: 50px;}

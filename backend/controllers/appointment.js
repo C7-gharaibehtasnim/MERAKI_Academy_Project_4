@@ -79,23 +79,28 @@ const getAppointmentBydoctorID = (req, res) => {
   console.log("HIFROM THE FUNCTION");
   const id = req.token.userId;
 
+
   console.log(req.token.role.role);
   appointmentModal
     .find({ doctor: id })
+//.populate("doctor","firstName lastName -_id").populate("clinic","sectionname -_id").exec()
 
     .then((appointment) => {
+  console.log(appointment)
       if (!appointment) {
         return res.status(404).json({
           success: false,
-          message: `you dont have appointments yet`,
+          message: `you have n`,
         });
       }
       res.status(200).json({
         success: true,
         message: `The appointments ${id} `,
         appointment: appointment,
-      });
-    })
+        
+       
+      })})
+   
     .catch((err) => {
       res.status(500).json({
         success: false,

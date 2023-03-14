@@ -48,10 +48,6 @@ doctorRouter.get(
   
   veiwdoctorsbyclinicid
 );
-// doctorRouter.get(
-//   "/check/:id",
-  
-//   checkDate
-// );
+
 
 module.exports = doctorRouter;
