@@ -61,7 +61,7 @@ const CustomMenu = React.forwardRef(
 );
 const PatientProfile = () => {
   const [open, setOpen] = useState(false);
-const [booking,setbooking]=useState(false)
+  const [booking, setbooking] = useState(false);
   const [firstName, setFirstName] = useState("");
   const [lastname, setLastname] = useState("");
   const [email, setEmail] = useState("");
@@ -71,24 +71,23 @@ const [booking,setbooking]=useState(false)
   const { token, userId, role, clinics } = useContext(UserContext);
   const [newappointment, setNewappointment] = useState({});
   const [clinicdoctors, setClinicdoctors] = useState(null);
-  // console.log(userId);
-  // console.log("line27", token);
+  const [avilable, setAvilable] = useState("");
+  const[diable,setDisable]=useState(false)
   useEffect(() => {
-    console.log("role", role);
     const getinfo = () => {
       axios
         .get(`http://localhost:5000/patient/${userId}`, {
           headers: { Authorization: `Bearer ${token}` },
         })
         .then((Response) => {
-          console.log(Response.data.patient);
+          //console.log(Response.data.patient);
           setFirstName(Response.data.patient.firstName);
           setLastname(Response.data.patient.lastName);
           setEmail(Response.data.patient.email);
           setInsurance(Response.data.patient.insurance);
         })
         .catch((err) => {
-          console.log(err);
+          //console.log(err);
         });
     };
     const getappointment = () => {
@@ -97,12 +96,12 @@ const [booking,setbooking]=useState(false)
           headers: { Authorization: `Bearer ${token}` },
         })
         .then((Response) => {
-          console.log(Response.data);
+          //console.log(Response.data);
 
           setAppointments(Response.data.appointment);
         })
         .catch((err) => {
-          console.log(err);
+          //console.log(err);
         });
     };
 
@@ -111,20 +110,22 @@ const [booking,setbooking]=useState(false)
   }, []);
   const deleteAppointment = (id) => {
     axios
-      .delete(`http://localhost:5000/appointment/delete/${id}`,{
+      .delete(`http://localhost:5000/appointment/delete/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((Response) => {
-        const result = appointments.filter((appointment) => appointment._id != id);
-        // console.log(result);
+        const result = appointments.filter(
+          (appointment) => appointment._id != id
+        );
+        // //console.log(result);
         setAppointments(result);
         // setDEleteResult((current) => {
         //   current = Response.data.message;
         // });
         //  const result = articles.filter((appointment) => appointment._id != id);
-        // console.log(result);
+        // //console.log(result);
         // setarticle(result);
-        // console.log(articles);
+        // //console.log(articles);
       })
       .catch((err) => {
         //setDEleteResult((current) => {
@@ -132,28 +133,54 @@ const [booking,setbooking]=useState(false)
       });
   };
   const getDoctorsForChoosenClinic = (value) => {
-    console.log();
+    //console.log();
     // const value = newappointment.clinic;
     axios
       .get(`http://localhost:5000/doctor/clinic/${value}`)
       .then((Response) => {
-        console.log(Response.data.doctor);
+        //console.log(Response.data.doctor);
         setClinicdoctors(Response.data.doctor);
       })
       .catch((err) => {
-        console.log(err);
+        //console.log(err);
       });
   };
+ const createNewAppointment=()=>{
+  console.log(newappointment)
+  axios
+  .post(
+    `http://localhost:5000/appointment`,
+    { ...newappointment },
+    { headers: { Authorization: `Bearer ${token}` } }
+  )
+  .then((response) => {
+     console.log(response.data.message);
+  })
+  .catch((err) => {
+    console.log(err);
+  });
+}
+ 
   const checkTimeAndDate = (time) => {
     const x = newappointment.doctor;
-
+console.log(newappointment)
     axios
-      .get(`http://localhost:5000/doctor/check/${x}`, {
+      .get(`http://localhost:5000/appointment/check/${x}`, {
         date: newappointment.date,
         time: time,
       })
       .then((result) => {
-        console.log(result);
+        console.log(result.data);
+        setAvilable(result.data.message);
+        setNewappointment(
+          (current) => {
+            return {
+              ...current,
+              time:time }})
+        if (result.data.sucess===false)
+        {
+          setDisable(true)
+        }
       });
   };
   return (
@@ -171,14 +198,16 @@ const [booking,setbooking]=useState(false)
                     borderBottomLeftRadius: ".5rem",
                   }}
                 >
-                  <MDBTypography tag="h5">
-                    {"welcome " + firstName + "  " + lastname}
+                   <MDBTypography tag="h5">
+                   welcome
                   </MDBTypography>
-                  <MDBIcon far icon="edit mb-5" />
+                  <MDBTypography tag="h5">
+                    { firstName + "  " + lastname}
+                  </MDBTypography>
                   <MDBCol size="6" className="mb-3">
                     <MDBRow className="pt-1">
                       <MDBTypography tag="h6">{email}</MDBTypography>
-                      <MDBCardText className="text-muted">{email}</MDBCardText>
+                     
                     </MDBRow>
                   </MDBCol>
                 </MDBCol>
@@ -194,9 +223,8 @@ const [booking,setbooking]=useState(false)
                   <MDBRow className="pt-1">
                     <MDBCol size="15" className="mb-3">
                       {appointments &&
-                    
                         appointments.map((Element) => {
-                          console.log(Element);
+                          //console.log(Element);
                           return (
                             <>
                               <Collapse in={open}>
@@ -221,7 +249,6 @@ const [booking,setbooking]=useState(false)
                                           <MDBCardBody className="p-4">
                                             <div className="d-flex text-black">
                                               <div className="flex-grow-1 ms-3">
-                                           
                                                 <div
                                                   className="d-flex justify-content-start rounded-3 p-2 mb-2"
                                                   style={{
@@ -229,7 +256,9 @@ const [booking,setbooking]=useState(false)
                                                   }}
                                                 >
                                                   <MDBCardTitle>
-     Doctor Name:{ " "}                                               {Element.doctor.firstName }{" "}{Element.doctor.lastName }
+                                                    Doctor Name:{" "}
+                                                    {Element.doctor.firstName}{" "}
+                                                    {Element.doctor.lastName}
                                                   </MDBCardTitle>
                                                 </div>
                                                 <div
@@ -256,7 +285,9 @@ const [booking,setbooking]=useState(false)
                                                   <MDBBtn
                                                     outline
                                                     className="me-1 flex-grow-1"
-onClick={deleteAppointment(Element._id)}
+                                                    onClick={deleteAppointment(
+                                                      Element._id
+                                                    )}
                                                   >
                                                     delete
                                                   </MDBBtn>
@@ -278,184 +309,215 @@ onClick={deleteAppointment(Element._id)}
                         })}
                     </MDBCol>
                   </MDBRow>
-                  <MDBTypography tag="h6" className="myappointment"  onClick={() => setbooking(!booking)}> Book An Appointment</MDBTypography>
+                  <MDBTypography
+                    tag="h6"
+                    className="myappointment"
+                    onClick={() => setbooking(!booking)}
+                  >
+                    {" "}
+                    Book An Appointment
+                  </MDBTypography>
                   <hr className="mt-0 mb-4" />
                   <MDBRow className="pt-1">
                     <MDBCol size="15" className="mb-3">
-                    <Collapse in={booking}>
-                      <div
-                        className="vh-100"
-                        style={{ backgroundColor: "#9de2ff" }}
-                      >
-                        <MDBContainer>
-                          <MDBRow className="justify-content-center">
-                            <MDBCol md="9" lg="7" xl="5" className="mt-5">
-                              <MDBCard style={{ borderRadius: "15px" }}>
-                                <MDBCardBody className="p-4">
-                                  <div className="d-flex text-black">
-                                    <div className="flex-grow-1 ms-3">
-                                      <div
-                                        className="d-flex justify-content-start rounded-3 p-2 mb-2"
-                                        style={{ backgroundColor: "#efefef" }}
-                                      >
-                                        <div>
-                                          <Dropdown>
-                                            <Dropdown.Toggle
-                                              as={CustomToggle}
-                                              id="dropdown-custom-components"
-                                            >
-                                              Clinic Name
-                                            </Dropdown.Toggle>
+                      <Collapse in={booking}>
+                        <div
+                          className="vh-100"
+                          style={{ backgroundColor: "#9de2ff" }}
+                        >
+                          <MDBContainer>
+                            <MDBRow className="justify-content-center">
+                              <MDBCol md="9" lg="7" xl="5" className="mt-5">
+                                <MDBCard style={{ borderRadius: "15px" }}>
+                                  <MDBCardBody className="p-4">
+                                    <div className="d-flex text-black">
+                                      <div className="flex-grow-1 ms-3">
+                                        <div
+                                          className="d-flex justify-content-start rounded-3 p-2 mb-2"
+                                          style={{ backgroundColor: "#efefef" }}
+                                        >
+                                          <div>
+                                            <Dropdown>
+                                              <Dropdown.Toggle
+                                                as={CustomToggle}
+                                                id="dropdown-custom-components"
+                                              >
+                                                Clinic Name
+                                              </Dropdown.Toggle>
 
-                                            <Dropdown.Menu as={CustomMenu}>
-                                              {clinics &&
-                                                clinics.map((clinic) => {
-                                                  {
-                                                    console.log(clinic);
-                                                  }
+                                              <Dropdown.Menu as={CustomMenu}>
+                                                {clinics &&
+                                                  clinics.map((clinic) => {
+                                                    {
+                                                      //console.log(clinic);
+                                                    }
 
-                                                  return (
-                                                    <Dropdown.Item
-                                                      value={clinic._id}
-                                                      eventKey="1"
-                                                      onClick={(e) => {
-                                                        getDoctorsForChoosenClinic(
-                                                          e.target.attributes
-                                                            .value.value
-                                                        );
-                                                        setNewappointment({
-                                                          clinic:
+                                                    return (
+                                                      <Dropdown.Item
+                                                        value={clinic._id}
+                                                        eventKey="1"
+                                                        onClick={(e) => {
+                                                          console.log(e.target.attributes.value.value)
+
+                                                          getDoctorsForChoosenClinic(
                                                             e.target.attributes
-                                                              .value.value,
-                                                        });
-                                                      }}
-                                                    >
-                                                      {clinic.sectionname}
-                                                    </Dropdown.Item>
-                                                  );
-                                                })}
-                                            </Dropdown.Menu>
-                                          </Dropdown>
+                                                              .value.value
+                                                          );
+                                                          setNewappointment((clinic)={
+                                                           clinic:
+                                                              e.target
+                                                                .attributes
+                                                                .value.value,
+                                                                                                                        })
+                                                        }  }                                              
+                                                      >
+                                                        {clinic.sectionname}
+                                                      </Dropdown.Item>
+                                                    );
+                                                  })}
+                                              </Dropdown.Menu>
+                                            </Dropdown>
+                                          </div>
                                         </div>
-                                      </div>
 
-                                      <div
-                                        className="d-flex justify-content-start rounded-3 p-2 mb-2"
-                                        style={{ backgroundColor: "#efefef" }}
-                                      >
-                                        <div>
-                                          <Dropdown>
-                                            <Dropdown.Toggle
-                                              as={CustomToggle}
-                                              id="dropdown-custom-components"
+                                        <div
+                                          className="d-flex justify-content-start rounded-3 p-2 mb-2"
+                                          style={{ backgroundColor: "#efefef" }}
+                                        >
+                                          <div>
+                                            <Dropdown>
+                                              <Dropdown.Toggle
+                                                as={CustomToggle}
+                                                id="dropdown-custom-components"
+                                              >
+                                                Doctors
+                                              </Dropdown.Toggle>
+
+                                              <Dropdown.Menu
+                                               
+                                              
+                                                as={CustomMenu}
+                                              >
+                                                {clinicdoctors &&
+                                                  clinicdoctors.map(
+                                                    (doctor) => {
+                                                      return (
+                                                        <Dropdown.Item
+                                                          value={doctor._id}
+                                                          eventKey="1"
+                                                          onClick={(e) => {
+                                                            console.log(
+                                                              e.target
+                                                                        .attributes
+                                                                         .value.value
+                                                            );
+
+                                                            setNewappointment(
+                                                               (current) => {
+                                                                 return {
+                                                                   ...current,
+                                                                   doctor: e.target
+                                                                   .attributes
+                                                                    .value.value
+                                                                
+                                
+                                                                    
+                                                                 };
+                                                               }
+                                                             );
+                                                          }}
+                                                        >
+                                                          {doctor.firstName +
+                                                            "  " +
+                                                            doctor.lastName}
+                                                        </Dropdown.Item>
+                                                      );
+                                                    }
+                                                  )}
+                                              </Dropdown.Menu>
+                                            </Dropdown>
+                                          </div>
+                                        </div>
+
+                                        <div
+                                          className="d-flex justify-content-start rounded-3 p-2 mb-2"
+                                          style={{ backgroundColor: "#efefef" }}
+                                        >
+                                          <div>
+                                            <input
+                                              type="date"
+                                              onChange={(e) => {
+                                                console.log(newappointment);
+                                                setNewappointment((current) => {
+                                                  return {
+                                                    ...current,
+                                                    
+                                                    date: e.target.value,
+                                                  };
+                                                });
+                                              }}
+                                            />
+                                          </div>
+                                        </div>
+                                        <div
+                                          className="d-flex justify-content-start rounded-3 p-2 mb-2"
+                                          style={{ backgroundColor: "#efefef" }}
+                                        >
+                                          <div>
+                                            <select
+                                              name="date"
+                                              id="date"
+                                              onChange={(e) => {
+                                                checkTimeAndDate(
+                                                  e.target.value
+                                                );
+                                              }}
                                             >
-                                              Doctors
-                                            </Dropdown.Toggle>
-
-                                            <Dropdown.Menu as={CustomMenu}>
-                                              {clinicdoctors &&
-                                                clinicdoctors.map((doctor) => {
-                                                  {
-                                                    console.log(doctor);
-                                                  }
-
-                                                  return (
-                                                    <Dropdown.Item
-                                                      value={doctor._id}
-                                                      eventKey="1"
-                                                      onClick={(e) => {
-                                                        console.log(
-                                                          e.target.attributes
-                                                            .value.value
-                                                        );
-
-                                                        setNewappointment(
-                                                          (value) => {
-                                                            return {
-                                                              ...value.clinic,
-                                                              doctor:
-                                                                e.target
-                                                                  .attributes
-                                                                  .value.value,
-                                                            };
-                                                          }
-                                                        );
-                                                      }}
-                                                    >
-                                                      {doctor.firstName +
-                                                        "  " +
-                                                        doctor.lastName}
-                                                    </Dropdown.Item>
-                                                  );
-                                                })}
-                                            </Dropdown.Menu>
-                                          </Dropdown>
+                                                                                            <option >Choose Time </option>
+                                              <option value="8-9pm">8-9am</option>
+                                              <option value="9-10pm">
+                                                9-10am
+                                              </option>
+                                              <option value="10-11pm">
+                                                10-11am
+                                              </option>
+                                              <option value="11-12pm">
+                                                11-12pm
+                                              </option>
+                                              <option value="12-1pm">
+                                                12-1pm
+                                              </option>
+                                              <option value="1-2pm">1-2pm</option>
+                                            </select>
+                                          </div>
+                                        </div>
+                                        {avilable&&
+                                        <>
+                                        <div
+                                          className="d-flex justify-content-start rounded-3 p-2 mb-2"
+                                          style={{ backgroundColor: "#efefef" }}
+                                        >
+                                          <div>
+                                            <p>{avilable}</p>
+                                          </div>
+                                        </div>
+                                        </> }
+                                        <div className="d-flex pt-1">
+                                          <MDBBtn onClick={(e)=>{createNewAppointment()}} className="flex-grow-1" disabled={diable} >
+                                            Book
+                                          </MDBBtn>
                                         </div>
                                       </div>
-
-                                      <div
-                                        className="d-flex justify-content-start rounded-3 p-2 mb-2"
-                                        style={{ backgroundColor: "#efefef" }}
-                                      >
-                                        <div>
-                                          <input
-                                            type="date"
-                                            onChange={(e) => {
-                                              console.log(e);
-                                              setNewappointment((value) => {
-                                                return {
-                                                  ...value.clinic,
-                                                  ...value.doctor,
-                                                  date: e,
-                                                };
-                                              });
-                                            }}
-                                          />
-                                        </div>
-                                      </div>
-                                      <div
-                                        className="d-flex justify-content-start rounded-3 p-2 mb-2"
-                                        style={{ backgroundColor: "#efefef" }}
-                                      >
-                                        <div>
-                                          <select
-                                            name="date"
-                                            id="date"
-                                            onChange={(e) => {
-                                              checkTimeAndDate(e.target.value);
-                                            }}
-                                          >
-                                            <option value="8-9">8-9am</option>
-                                            <option value="9-10">9-10am</option>
-                                            <option value="10-11">
-                                              10-11am
-                                            </option>
-                                            <option value="11-12">
-                                              11-12pm
-                                            </option>
-                                            <option value="12-1">12-1pm</option>
-                                            <option value="1-2">1-2pm</option>
-                                          </select>
-                                        </div>
-                                      </div>
-
-                                      <div className="d-flex pt-1">
-                                        <MDBBtn className="flex-grow-1">
-                                          Book
-                                        </MDBBtn>
-                                       
-                                      </div>
-                                      
+                                     
                                     </div>
-                                  </div>
-                                </MDBCardBody>
-                              </MDBCard>
-                            </MDBCol>
-                          </MDBRow>
-                        </MDBContainer>
-                      </div>
+                                  </MDBCardBody>
+                                </MDBCard>
+                              </MDBCol>
+                            </MDBRow>
+                          </MDBContainer>
+                        </div>
                       </Collapse>
-                      <MDBTypography tag="h6">lab Reports</MDBTypography>
+                     
                     </MDBCol>
                   </MDBRow>
 

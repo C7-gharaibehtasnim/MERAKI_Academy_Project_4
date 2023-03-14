@@ -22,6 +22,8 @@ function App() {
   const [login, setLogin] = useState({ email: "hi", password: "hello" });
   const [token, setToken] = useState(localStorage.getItem("token"));
 const [clinics, setClinics] = useState(null)
+const[opendoctors,setOpenDoctors]=useState(false)
+
   console.log(token)
  useEffect(()=>{
   if(token)
@@ -51,7 +53,7 @@ const [clinics, setClinics] = useState(null)
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [role, setRole ] = useState(localStorage.getItem("role"))
   return (
-    <UserContext.Provider value={{setClinics,clinics,role, setRole ,userId,setuserid,login, setLogin, isLoggedIn, setIsLoggedIn, token, setToken}}>
+    <UserContext.Provider value={{opendoctors,setOpenDoctors,setClinics,clinics,role, setRole ,userId,setuserid,login, setLogin, isLoggedIn, setIsLoggedIn, token, setToken}}>
     <div className="App">
       <header className="App-header">
         <h1>Project 4 </h1>

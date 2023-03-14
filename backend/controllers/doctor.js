@@ -237,30 +237,12 @@ const veiwdoctorsbyclinicid=(req,res)=>{
       });
     });
 }
-const checkDate =(req,res)=>{
-  const id=req.params.id
-  const {time,date}=req.body.date
-console.log("id,time,date")
-  doctorModel
-  .findOne({ _id: id },{time:time},{date:date}).then((result)=>{
-res.json({
-  success:false,
-  message:" Already booked up please choose another time"
-}).catch ((err)=>{
-  res.status(500).json({
-    success: false,
-    message: `Server Error`,
-    err: err.message,
-})
-  })
-})
 
-}
 module.exports = {
   register,
  veiwdoctorsbyclinicid,
   updateprofile,
   addDoctor,
   deleteDoctor,
-  veiwProfile,checkDate
+  veiwProfile
 };

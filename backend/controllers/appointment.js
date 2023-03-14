@@ -6,7 +6,7 @@ const bookAnAppointment = (req, res) => {
   const patient = req.token.userId;
   console.log(patient);
   const { date, doctor, time,clinic } = req.body;
-
+console.log( date, doctor, time,clinic)
   const appointment = new appointmentModal({ patient, doctor, date, time,clinic });
   appointmentModal
     .findOne({ date, time, doctor })
@@ -22,7 +22,7 @@ const bookAnAppointment = (req, res) => {
           .save()
           .then((result) => {
           
-            console.log("line24", result)
+            //console.log("line24", result)
             res.status(201).json({
               success: true,
               message: `Appointment Booked Successfully`,
@@ -158,11 +158,39 @@ const UpdateAppoitment = (req, res) => {
       });
     });
 };
+const checkDate =(req,res)=>{
+  const id=req.params.docid
+  const {time,date}=req.body
+console.log("id,time,date")
+  appointmentModal
+  .findOne({$and: [{ doctor: id },{time:time},{date:date}]}).then((result)=>{
+    console.log(result)
+    if(result===null)
+    {
+      res.json({
+        success:true,
+        message:"time is available"
+      })
+    }
+    else
+res.json({
+  success:false,
+  message:" Already booked up please choose another time"
+})})
+.catch ((err)=>{
+  res.status(500).json({
+    success: false,
+    message: `Server Error`,
+    err: err.message,
+})
+  })
 
+
+}
 module.exports = {
   bookAnAppointment,
   getAppointmentBypatientID,
   getAppointmentBydoctorID,
   deleteAppoitment,
-  UpdateAppoitment,
+  UpdateAppoitment,checkDate
 };

@@ -9,13 +9,13 @@ import NavDropdown from "react-bootstrap/NavDropdown";
 import { UserContext } from "../App";
 
 const Navigation = () => {
-  const {isLoggedIn,role}=useContext(UserContext)
+  const {isLoggedIn,role,opendoctors,setOpenDoctors}=useContext(UserContext)
  console.log(isLoggedIn)
   return (
     <div>
       <Link to="/"> Home </Link>
        <Link to="/about"> About </Link>
-       <Link to="/clinics"> Clinics </Link>
+       <Link to="/clinics" onClick={()=>{setOpenDoctors((opendoctors)=>{opendoctors=false})}}> Clinics </Link>
        <Link to="/donate"> Donate </Link>
        { role=="patient" &&isLoggedIn==true ? <> <Link to="/patient"> my profile </Link>   <Link to="/"> logout </Link> </>:""}
        { role=="doctor" &&isLoggedIn==true ? <> <Link to="/doctor"> my profile </Link>   <Link to="/"> logout </Link> </>:""}
