@@ -14,6 +14,7 @@ import PatientProfile from "./components/PatientProfile";
 import Adminprofile from "./components/Adminprofile";
 import 'mdb-react-ui-kit/dist/css/mdb.min.css';
 import "rsuite/dist/rsuite.css";
+import Search from "./components/Search";
 import axios from "axios";
 export const UserContext = createContext();
 function App() {
@@ -49,11 +50,12 @@ const[opendoctors,setOpenDoctors]=useState(false)
        });
      },[])
 
+     const[searchResult,setSeatchResult]=useState()
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [role, setRole ] = useState(localStorage.getItem("role"))
   return (
-    <UserContext.Provider value={{opendoctors,setOpenDoctors,setClinics,clinics,role, setRole ,userId,setuserid,login, setLogin, isLoggedIn, setIsLoggedIn, token, setToken}}>
+    <UserContext.Provider value={{searchResult,setSeatchResult,opendoctors,setOpenDoctors,setClinics,clinics,role, setRole ,userId,setuserid,login, setLogin, isLoggedIn, setIsLoggedIn, token, setToken}}>
     <div className="App">
       <header className="App-header">
         <h1>Project 4 </h1>
@@ -69,14 +71,10 @@ const[opendoctors,setOpenDoctors]=useState(false)
         <Route path="/doctor" element={<DoctorProfile/>} />
         <Route path="/patient" element={<PatientProfile/>} />
         <Route path="/admin" element={<Adminprofile/>} />
+        <Route path="/search" element={<Search/>}/>
 
         
-        <Route
-          path="*"
-          element={
-            <h1> 404 NOT FOUND: The page you are looking for doesn't exist </h1>
-          }
-        />
+        <Route path="*" element={<h1> 404 NOT FOUND: The page you are looking for doesn't exist </h1>}/>
       </Routes>
     </div>
     </UserContext.Provider>

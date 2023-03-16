@@ -5,6 +5,7 @@ import { UserContext } from "../App";
 import axios from "axios";
 import Dropdown from "react-bootstrap/Dropdown";
 import Form from "react-bootstrap/Form";
+//import {GoogleLogin} from "react-google-login"
 import {
   MDBBtn,
   MDBContainer,
@@ -18,6 +19,8 @@ import {
 } from "mdb-react-ui-kit";
 
 const Register = () => {
+const clientId="893024847177-2bmi97tmciiqlq0tt5p36sb5dgm134s4.apps.googleusercontent.com"
+
   const Navigate = useNavigate();
   const [radiovalue, setRadioValue] = useState("");
   const [adduser, setAddUser] = useState({});
@@ -156,6 +159,12 @@ const Register = () => {
           console.log(err.response);
         });
   };
+  const onSuccess=(res)=>{
+    console.log(res)
+  }
+  const onFailure=(res)=>{
+    console.log(res.profileObj)
+  }
 
   return (
     <MDBContainer fluid>
@@ -163,7 +172,7 @@ const Register = () => {
         <MDBCol lg="8">
           <MDBCard className="my-5 rounded-3" style={{ maxWidth: "600px" }}>
             <MDBCardImage
-              src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-registration/img3.webp"
+              src="https://www.lacare.org/sites/default/files/images/healthinmotion-main.jpg"
               className="w-100 rounded-top"
               alt="Sample photo"
             />
@@ -324,7 +333,7 @@ const Register = () => {
                 <>
                   <MDBRow>
                     <MDBCol md="6">
-                      <Dropdown>
+                      <Dropdown style={{fontSize:"20px",paddingTop:"15px"}}>
                         <Dropdown.Toggle
                           as={CustomToggle}
                           id="dropdown-custom-components"
@@ -359,7 +368,7 @@ const Register = () => {
                   </MDBRow>
                   <MDBRow>
                     <MDBCol md="6">
-                      <MDBTextArea onChange={(e) => {
+                      <MDBTextArea   onChange={(e) => {
                           setAddUser((pref) => {
                             return { ...pref, pref: e.target.value };
                           });
@@ -392,7 +401,8 @@ const Register = () => {
                   </MDBRow>
                   <MDBRow>
                     <MDBCol md="6">
-                      <MDBCardImage src={imagesrc} />
+                      <MDBCardImage style={{"width":"150px","height"
+                    :"150px"}} src={imagesrc} />
                     </MDBCol>
                     <MDBCol md="6" className="mb-4"></MDBCol>
                   </MDBRow>

@@ -27,40 +27,49 @@ const getDoctorsForChoosenClinic = (value) => {
         <MDBRow className="justify-content-center align-items-center h-100">
           <MDBCol lg="9" xl="7">
             <MDBCard>
-             
-             {!opendoctors ?
-              <MDBCardBody  className="text-black p-4">
-              <div className="d-flex justify-content-between align-items-center mb-4">
+            <div className="d-flex justify-content-between align-items-center mb-4"style={{ marginTop: '20px',marginLeft:"25px" }}>
                   <MDBCardText className="lead fw-normal mb-0">Our Clinics</MDBCardText>
-                  <MDBCardText className="mb-0"><a href="#!" className="text-muted">Show all</a></MDBCardText>
+                  <MDBCardText className="mb-0"><a href="#!" className="text-muted" style={{marginRight:"30px"}}>Show all</a></MDBCardText>
                 </div>
+             {!opendoctors ?
+              <MDBCardBody  className="text-black p-4"  style={{"display":"grid","gridTemplateColumns":"1fr 1fr" }}>
+             
               {clinics&& clinics.map((clinic) => {
                             return (<>
               
                
                 <MDBRow>
                 
-                  <MDBCol className="mb-2">
-                
-                    <img src={clinic.image} onClick={()=>{
+                  <MDBCol className="mb-1">
+                <div className="w-100 rounded-3  hero-image">
+
+<MDBCard >
+  <MDBCardImage src={clinic.image}  position='top' onClick={()=>{
                       getDoctorsForChoosenClinic(clinic._id)
                       setOpenDoctors(!opendoctors)}}
-                      alt="Dentistry" className="w-100 rounded-3" />
+                      alt="Dentistry"  />
+                       
+                  <h1 className='hero-text' style={{"font-size":"40px","background":"gray", "opacity": "0.5" ,"width":"100%"}}>{clinic.sectionname}</h1>
+                 
+</MDBCard>
+                  </div>
                   </MDBCol>
                
-                </MDBRow>
+               </MDBRow>
                
                 </>
                             )})}
+                           
 
               </MDBCardBody>
 : 
-<div style={{display:"grid", gridTemplateColumns:"1fr 1fr" ,rowGap:"10px",columnGap:"10px",padding:"10px"}}>
-{clinicdoctors && clinicdoctors.map((elem)=>{
+<div style={{"display":"grid","gridTemplateColumns":"1fr 1fr" ,boxShadow:"gray 20px" }}>
 
-return(
+{clinicdoctors && clinicdoctors.map((elem)=>{
  
-<MDBCard style={{width:"80%",padding:"10px"}}>
+return(
+
+<MDBCard style={{width:"100%",padding:"20px",}}>
   <MDBCardImage src={elem.image} alt='...' position='top' />
   <MDBCardBody>
   <MDBCardText style={{fontWeight:"bold",fontSize:"20px"}}>
@@ -75,6 +84,7 @@ return(
     </MDBCardText>
   </MDBCardBody>
 </MDBCard>
+
 
 )
 

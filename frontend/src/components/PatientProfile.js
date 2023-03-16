@@ -74,7 +74,7 @@ const PatientProfile = () => {
   const [insurance, setInsurance] = useState("");
   const [age, setAge] = useState("");
   const { token, userId, role, clinics } = useContext(UserContext);
-  const [newappointment, setNewappointment] = useState({});
+  const [newappointment, setNewappointment] = useState(null);
   const [clinicdoctors, setClinicdoctors] = useState(null);
   const [avilable, setAvilable] = useState("");
   const[diable,setDisable]=useState(false)
@@ -210,15 +210,15 @@ console.log(newappointment)
     .put(`http://localhost:5000/appointment/update/${needupdate}`, { ...updatedvalue }, {
       headers: { Authorization: `Bearer ${token}` }})
     .then((response) => {
-      console.log(response.data);
+      console.log(response.data.appointment);
 
       const result = appointments.map((appointment, i) => {
         if (appointment._id == needupdate) {
-          return (appointment = response.data);
+          return (appointment = response.data.appointment);
         }
         return appointment;
       });
-      console.log(result);
+     console.log(result);
       setAppointments(result);
     })
     .catch((err) => {
@@ -525,26 +525,7 @@ console.log(newappointment)
 
 
 
-                        {/* <input
-                          onChange={(e) => {
-                            setUpdatedValue((title) => {
-                              return { ...title, title: e.target.value };
-                            });
-                          }}
-                          type="text"
-                          placeholder="title"
-                        />
-                        <textarea
-                          onChange={(e) => {
-                            setUpdatedValue((description) => {
-                              return {
-                                ...description,
-                                description: e.target.value,
-                              };
-                            });
-                          }}
-                          placeholder="description"
-                        /> */}
+                      
                       </Modal.Body>
                       <Modal.Footer>
                         <Button variant="secondary" onClick={handleClose}>

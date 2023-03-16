@@ -211,7 +211,7 @@ const veiwdoctorsbyclinicid=(req,res)=>{
   console.log(id);
   doctorModel
     .find({ clinic: id })
-    .populate("doctor","firstName -_id").populate("clinic","sectionname -_id").exec()
+    //.populate("doctor","firstName -_id").populate("clinic","sectionname -_id").exec()
 
     .then((doctor) => {
   console.log(doctor)
@@ -237,12 +237,37 @@ const veiwdoctorsbyclinicid=(req,res)=>{
       });
     });
 }
-
+const searchResult =(req,res)=>{
+  const search=req.query.search
+ ////const searchitem=req.query.searchitem
+ doctorModel.find({firstName:{$regex:search}})
+ .then((doctor) => {
+  console.log(doctor)
+  if (!doctor) {
+    return res.status(404).json({
+      success: false,
+      message: `The doctor with id =>  not found`,
+    });
+  }
+  res.status(200).json({
+    success: true,
+    message: `The doctor  `,
+    doctor: doctor,
+  });
+})
+.catch((err) => {
+  res.status(500).json({
+    success: false,
+    message: `Server Error`,
+    err: err.message,
+  });
+});
+}
 module.exports = {
   register,
  veiwdoctorsbyclinicid,
   updateprofile,
   addDoctor,
   deleteDoctor,
-  veiwProfile
+  veiwProfile,searchResult
 };

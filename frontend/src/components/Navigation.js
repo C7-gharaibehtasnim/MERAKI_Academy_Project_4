@@ -1,86 +1,156 @@
-import React, { useContext } from "react";
-import { Routes, Route, Link } from "react-router-dom";
-import Button from "react-bootstrap/Button";
-import Container from "react-bootstrap/Container";
-import Form from "react-bootstrap/Form";
-import Nav from "react-bootstrap/Nav";
-import Navbar from "react-bootstrap/Navbar";
-import NavDropdown from "react-bootstrap/NavDropdown";
+import React, { useState, useContext } from "react";
+import {
+  MDBContainer,
+  MDBNavbar,
+  MDBNavbarBrand,
+  MDBNavbarToggler,
+  MDBIcon,
+  MDBNavbarNav,
+  MDBNavbarItem,
+  MDBNavbarLink,
+  MDBBtn,
+  MDBDropdown,
+  MDBDropdownToggle,
+  MDBDropdownMenu,
+  MDBDropdownItem,
+  MDBCollapse,
+} from "mdb-react-ui-kit";
+import {  useNavigate } from "react-router-dom";
+
 import { UserContext } from "../App";
+import axios from "axios";
 
 const Navigation = () => {
-  const {isLoggedIn,role,opendoctors,setOpenDoctors}=useContext(UserContext)
- console.log(isLoggedIn)
+  const Navigate=useNavigate()
+  const {
+    isLoggedIn,
+    role,
+    opendoctors,
+    setOpenDoctors,
+    setSeatchResult,setToken,setIsLoggedIn,
+    searchResult,setuserid
+  } = useContext(UserContext);
+  console.log(isLoggedIn);
+  const [showBasic, setShowBasic] = useState(false);
+  // const [searchItem, setSearchItem] = useState();
+  // const search = () => {
+  //   axios
+  //     .get(`http://localhost:5000/doctor/search/result?search=${searchItem}`)
+
+  //     .then((Response) => {
+  //       console.log(Response.data);
+  //       setSeatchResult(Response.data.doctor);
+  //       //setClinics(Response.data.clinic)
+  //       Navigate("/search");
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //     });
+  // };
   return (
-    <div>
-      <Link to="/"> Home </Link>
-       <Link to="/about"> About </Link>
-       <Link to="/clinics" onClick={()=>{setOpenDoctors((opendoctors)=>{opendoctors=false})}}> Clinics </Link>
-       <Link to="/donate"> Donate </Link>
-       { role=="patient" &&isLoggedIn==true ? <> <Link to="/patient"> my profile </Link>   <Link to="/"> logout </Link> </>:""}
-       { role=="doctor" &&isLoggedIn==true ? <> <Link to="/doctor"> my profile </Link>   <Link to="/"> logout </Link> </>:""}
-     { isLoggedIn==false &&<>
-      <Link to="/register"> Register </Link>
-       <Link to="/login"> Login </Link></>}
-       
-  </div>
-    // <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
-    //   <Container>
-    //     <Navbar.Brand href="#home">React-Bootstrap</Navbar.Brand>
-    //     <Navbar.Toggle aria-controls="responsive-navbar-nav" />
-    //     <Navbar.Collapse id="responsive-navbar-nav">
-    //       <Nav className="me-auto">
-    //         <Nav.Link href="#features">Features</Nav.Link>
-    //         <Nav.Link href="#pricing">Pricing</Nav.Link>
-    //         <NavDropdown title="Dropdown" id="collasible-nav-dropdown">
-    //           <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
-    //           <NavDropdown.Item href="#action/3.2">
-    //             Another action
-    //           </NavDropdown.Item>
-    //           <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
-    //           <NavDropdown.Divider />
-    //           <NavDropdown.Item href="#action/3.4">
-    //             Separated link
-    //           </NavDropdown.Item>
-    //         </NavDropdown>
-    //       </Nav>
-    //       <Nav>
-    //         <Nav.Link href="/login">Login</Nav.Link>
-    //         <Nav.Link eventKey={2} href="/register">
-    //         Register
-    //         </Nav.Link>
-    //       </Nav>
-    //     </Navbar.Collapse>
-    //   </Container>
-    // </Navbar>
-    // </div>
+    <MDBNavbar expand="lg" light bgColor="light">
+      <MDBContainer fluid>
+        <MDBNavbarBrand href="#">Care Hospital</MDBNavbarBrand>
+        {/* <form className="d-flex input-group w-auto">
+          <input
+            type="search"
+            className="form-control"
+            placeholder="Find A Doctor"
+            aria-label="Search"
+            onChange={(e) => {
+              setSearchItem(e.target.value);
+            }}
+          />
+          <MDBBtn
+            onClick={(e) => {
+              e.preventDefault();search();
+             
+            }}
+            color="primary"
+          >
+            Search
+          </MDBBtn>
+        </form> */}
+        <MDBNavbarToggler
+          aria-controls="navbarSupportedContent"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+          onClick={() => setShowBasic(!showBasic)}
+        >
+          <MDBIcon icon="bars" fas />
+        </MDBNavbarToggler>
+
+        <MDBCollapse navbar show={showBasic}>
+          <MDBNavbarNav className="mr-auto mb-2 mb-lg-0">
+            <MDBNavbarItem>
+              <MDBNavbarLink active aria-current="page" href="/">
+                Home
+              </MDBNavbarLink>
+            </MDBNavbarItem>
+            <MDBNavbarItem>
+              <MDBNavbarLink href="/about">About</MDBNavbarLink>
+            </MDBNavbarItem>
+            <MDBNavbarItem>
+              <MDBNavbarLink href="/clinics">clinics</MDBNavbarLink>
+            </MDBNavbarItem>
+            <MDBNavbarItem>
+              <MDBNavbarLink href="/donate">Donate</MDBNavbarLink>
+            </MDBNavbarItem>
+
+            {role == "patient" && isLoggedIn == true ? (
+              <>
+                <MDBNavbarItem>
+                  <MDBNavbarLink href="/patient">My profile</MDBNavbarLink>
+                </MDBNavbarItem>
+                <MDBNavbarItem>
+                <MDBBtn onClick={()=>{
+            localStorage.clear()
+            setToken(null)
+            setIsLoggedIn(false)
+            setuserid(" ")
+
+            Navigate("/login")
+
+          }} >LogOut</MDBBtn>
+                </MDBNavbarItem>
+              </>
+            ) : (
+              ""
+            )}
+            {role == "doctor" && isLoggedIn == true ? (
+              <>
+                <MDBNavbarItem>
+                  <MDBNavbarLink href="/doctor">My profile</MDBNavbarLink>
+                </MDBNavbarItem>
+                <MDBNavbarItem>
+                <MDBBtn onClick={()=>{
+            localStorage.clear()
+            setToken(null)
+            setIsLoggedIn(false)
+            setuserid(" ")
+            Navigate("/login")
+
+          }} >LogOut</MDBBtn>
+                </MDBNavbarItem>
+              </>
+            ) : (
+              ""
+            )}
+            {isLoggedIn==false && <>
+              <MDBNavbarItem>
+                  <MDBNavbarLink href="/register">register</MDBNavbarLink>
+                </MDBNavbarItem>
+                <MDBNavbarItem>
+                <MDBNavbarItem>
+               
+                </MDBNavbarItem>
+                </MDBNavbarItem>
+            </>}
+          </MDBNavbarNav>
+        </MDBCollapse>
+      </MDBContainer>
+    </MDBNavbar>
   );
 };
-
-//  <Navbar bg="primary" expand="md">
-//  <Container>
-//      <Navbar.Brand href="#home">Navbar Brand</Navbar.Brand>
-//      <Navbar.Toggle aria-controls="basic-navbar-nav" />
-//      <Navbar.Collapse id="basic-navbar-nav">
-//        <Nav className="me-auto">
-//          <Nav.Link href="/">  Home </Nav.Link>
-//          <Nav.Link href="/about"> About </Nav.Link>
-//          <Nav.Link href="/donate">Donate</Nav.Link>
-
-//          <NavDropdown title="Clinics" id="basic-nav-dropdown">
-//            <NavDropdown.Item href="#action/3.1">Dropdown Item 1</NavDropdown.Item>
-//            <NavDropdown.Item href="#action/3.2">Dropdown Item 2</NavDropdown.Item>
-//            <NavDropdown.Item href="#action/3.3">Dropdown Item 3</NavDropdown.Item>
-//            <NavDropdown.Divider />
-//            <NavDropdown.Item href="#action/3.4">Another Item</NavDropdown.Item>
-//          </NavDropdown>
-//       </Nav>
-//      </Navbar.Collapse>
-//    </Container>
-// </Navbar>
-
-
-
-//
 
 export default Navigation;

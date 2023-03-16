@@ -1,6 +1,10 @@
 const appointmentModal = require("../models/appointmentSchema");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+// const accountSid = "ACb2eb670ca1f8af559907cfaf966b4e2d";
+// const authToken = "71b25f32c0bb08550a8de70a1f7753dd";
+// const client = require('twilio')(accountSid, authToken);
+
 
 const bookAnAppointment = (req, res) => {
   const patient = req.token.userId;
@@ -82,8 +86,7 @@ const getAppointmentBydoctorID = (req, res) => {
 
   console.log(req.token.role.role);
   appointmentModal
-    .find({ doctor: id })
-//.populate("doctor","firstName lastName -_id").populate("clinic","sectionname -_id").exec()
+    .find({ doctor: id }).populate("patient","firstName lastName -_id")
 
     .then((appointment) => {
   console.log(appointment)
@@ -105,7 +108,7 @@ const getAppointmentBydoctorID = (req, res) => {
       res.status(500).json({
         success: false,
         message: `Server Error`,
-        err: err.message,
+        err: err
       });
     });
 };
@@ -141,9 +144,10 @@ const UpdateAppoitment = (req, res) => {
     filter[key] == "" && delete filter[key];
   });
   appointmentModal
-    .findByIdAndUpdate({ _id: id }, req.body, { new: true })
-    .then((newAppointment) => {
-      if (!newAppointment) {
+    .findByIdAndUpdate({ _id: id }, req.body, { new: true }).populate("doctor","firstName lastName -_id").populate("clinic","sectionname -_id").exec()
+
+    .then((appointment) => {
+      if (!appointment) {
         return res.status(404).json({
           success: false,
           message: `The appointment with id => ${id} not found`,
@@ -152,7 +156,7 @@ const UpdateAppoitment = (req, res) => {
       res.status(202).json({
         success: true,
         message: `The appointment updated`,
-        newAppointment: newAppointment,
+        appointment: appointment,
       });
     })
     .catch((err) => {
@@ -192,6 +196,15 @@ res.json({
 
 
 }
+// const cancelApoointment=(req,res)=>{
+//   client.messages
+//   .create({
+//      body: 'This is the ship that made the Kessel Run in fourteen parsecs?',
+//      from: '+15017122661',
+//      to: '+15558675310'
+//    })
+//   .then(message => console.log(message.sid));
+// }
 module.exports = {
   bookAnAppointment,
   getAppointmentBypatientID,

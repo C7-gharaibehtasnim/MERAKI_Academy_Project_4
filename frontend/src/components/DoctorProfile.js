@@ -13,6 +13,8 @@ import {
 } from "mdb-react-ui-kit";
 import axios from "axios";
 import { UserContext } from "../App";
+import Collapse from "react-bootstrap/Collapse";
+import { MDBCardTitle, MDBBtn, MDBInput } from "mdb-react-ui-kit";
 
 const DoctorProfile = () => {
   const [image, setImage] = useState("");
@@ -23,6 +25,7 @@ const DoctorProfile = () => {
   const [appointments, setAppointments] = useState(null);
   const { token, userId,role,setIsLoggedIn } = useContext(UserContext);
  const [pref, setPref] = useState("")
+ const [open, setOpen] = useState(false);
 
   useEffect(() => {
    
@@ -47,7 +50,7 @@ const DoctorProfile = () => {
     };
     const getappointment = () => {
       axios
-        .get(`http://localhost:5000/doctor/appointment`, {
+        .get(`http://localhost:5000/doctor/myappointment/my`, {
           headers: { Authorization: `Bearer ${token}` },
         })
         .then((Response) => {
@@ -62,7 +65,30 @@ const DoctorProfile = () => {
     getinfo();
     getappointment();
   }, []);
-
+  const deleteAppointment = (id) => {
+    axios
+      .delete(`http://localhost:5000/appointment/delete/${id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .then((Response) => {
+        const result = appointments.filter(
+          (appointment) => appointment._id != id
+        );
+        // //console.log(result);
+        setAppointments(result);
+        // setDEleteResult((current) => {
+        //   current = Response.data.message;
+        // });
+        //  const result = articles.filter((appointment) => appointment._id != id);
+        // //console.log(result);
+        // setarticle(result);
+        // //console.log(articles);
+      })
+      .catch((err) => {
+        //setDEleteResult((current) => {
+        //current = err.response.data.message;
+      });
+  };
   return (
     <section className="vh-100" style={{ backgroundColor: "#f4f5f7" }}>
       <MDBContainer className="py-5 h-100">
@@ -101,40 +127,113 @@ const DoctorProfile = () => {
                         </MDBRow>
                       </MDBCol>
                 </MDBCol>
-                <MDBCol md="8">
                   <MDBCardBody className="p-4">
-                    <MDBTypography tag="h6">MY Appointments</MDBTypography>
+                    <MDBTypography  onClick={() => setOpen(!open)} tag="h6">MY Appointments</MDBTypography>
                     <hr className="mt-0 mb-4" />
-                    <MDBCol size="6" className="mb-3">
-                    <MDBRow className="pt-1">
-                   
-                    {appointments &&
-                    
-                          appointments.map((Element) => {
-                            <MDBCardText className="text-muted">
-                             {Element}
-                            </MDBCardText>;
-                          })}
+              
+                  
+                  <MDBRow className="pt-1">
+                    <MDBCol size="15" className="mb-3">
+{                    console.log(appointments)}
                      
-                    </MDBRow>
+                      {appointments &&
+                        appointments.map((Element) => {
+                          return (
+                            <>
+                              <Collapse in={open}>
+                                <div
+                                  className="vh-100,expandable"
+                                  style={{
+                                    backgroundColor: "#9de2ff",
+                                    marginTop: "15px",
+                                  }}
+                                >
+                                  <MDBContainer>
+                                    <MDBRow className="justify-content-center">
+                                      <MDBCol
+                                        md="9"
+                                        lg="7"
+                                        xl="5"
+                                        className="mt-5"
+                                      >
+                                        <MDBCard
+                                          style={{ borderRadius: "15px" }}
+                                        >
+                                          <MDBCardBody className="p-4">
+                                            <div className="d-flex text-black">
+                                              <div className="flex-grow-1 ms-3">
+                                                <div
+                                                  className="d-flex justify-content-start rounded-3 p-2 mb-2"
+                                                  style={{
+                                                    backgroundColor: "#efefef",
+                                                  }}
+                                                >
+                                                  <MDBCardTitle>
+                                                    Patient Name:{" "}
+                                                    {Element.firstName}{" "}
+                                                    {Element.lastName}
+                                                  </MDBCardTitle>
+                                                </div>
+                                                <div
+                                                  className="d-flex justify-content-start rounded-3 p-2 mb-2"
+                                                  style={{
+                                                    backgroundColor: "#efefef",
+                                                  }}
+                                                >
+                                                  <MDBCardTitle>
+                                                    Date: {Element.date}
+                                                  </MDBCardTitle>
+                                                </div>
+                                                <div
+                                                  className="d-flex justify-content-start rounded-3 p-2 mb-2"
+                                                  style={{
+                                                    backgroundColor: "#efefef",
+                                                  }}
+                                                >
+                                                  <MDBCardTitle>
+                                                    Time: {Element.time}
+                                                  </MDBCardTitle>
+                                                </div>
+                                                <div className="d-flex pt-1">
+                                                  <MDBBtn
+                                                    outline
+                                                    className="me-1 flex-grow-1"
+                                                    onClick={()=>{deleteAppointment(Element._id)}}
+                                                  >
+                                                    delete
+                                                  </MDBBtn>
+                                                 
+                                                </div>
+                                              </div>
+                                              
+                  
+                                            </div>
+                                          </MDBCardBody>
+                                        </MDBCard>
+                                      </MDBCol>
+                                    </MDBRow>
+                                  </MDBContainer>
+                                </div>
+                              </Collapse>
+                            </>
+                          );
+                        })}
                     </MDBCol>
-                    <MDBTypography tag="h6">Submit a vacation</MDBTypography>
-                    <hr className="mt-0 mb-4" />
-                    <MDBRow className="pt-1">
-                      <MDBCol size="6" className="mb-3">
-                        <MDBTypography tag="h6">Email</MDBTypography>
-                        <DateRangePicker render={<label/>} />
-                        
-                      </MDBCol>
-                      <MDBCol size="6" className="mb-3">
-                        <MDBTypography tag="h6">Phone</MDBTypography>
-                        <MDBCardText className="text-muted">
-                          123 456 789
-                        </MDBCardText>
-                      </MDBCol>
-                    </MDBRow>
-                  </MDBCardBody>
-                </MDBCol>
+                  </MDBRow>
+                 
+                  
+                  <MDBTypography tag="h6"> Reports</MDBTypography>
+                  <hr className="mt-0 mb-4" />
+                  <MDBRow className="pt-1">
+                    <MDBCol size="6" className="mb-3">
+                      <MDBTypography tag="h6">lab Reports</MDBTypography>
+                    </MDBCol>
+                    <MDBCol size="6" className="mb-3">
+                      <MDBTypography tag="h6">X-ray Reports</MDBTypography>
+                      <MDBCardText className="text-muted"></MDBCardText>
+                    </MDBCol>
+                  </MDBRow>
+                </MDBCardBody>
               </MDBRow>
             </MDBCard>
           </MDBCol>

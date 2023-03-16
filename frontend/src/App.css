@@ -50,3 +50,58 @@ body{
 .Update {justify-content: center;padding: 5px;  margin-top: -15px;margin-right: 930px;}
 .popup input{  margin-left: 60px;margin-top: -60;width: 60%;height: 30px;}
 .popup textarea{  margin-left: 60px;margin-top: 5px;width: 60%;height: 50px;}
+.hero-image {
+  height: 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  position: relative;
+  padding: 4px;
+cursor: pointer;
+  
+
+}
+
+.hero-text {
+  text-align: center;
+  position: absolute;
+  top: 70%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: rgb(7, 7, 7);
+}
+
+.container{
+  padding: 30px;
+  border: red solid;
+ width: 100%;
+}
+.pannerimg{
+  background-image: url("./pannerimg.png");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  border: rgb(183, 214, 25) solid;
+  width: 100%;
+  height: 400px;
+}
+.pannerform{
+  border: rgb(183, 214, 25) solid;
+  width: 40%;
+  margin-left: 750px;
+  margin-top: 200px;
+}
+.pannerimg input{
+  border-radius: 30px;
+}
+.pannerimg button{
+  margin-left: 200px;
+  color: #000;
+  margin-top: 20px;
+  border-radius: 30px;
+  width: 40%;
+}
+.stories
+{
+  border: rebeccapurple solid;
+}
