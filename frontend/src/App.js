@@ -58,7 +58,7 @@ const[opendoctors,setOpenDoctors]=useState(false)
     <UserContext.Provider value={{searchResult,setSeatchResult,opendoctors,setOpenDoctors,setClinics,clinics,role, setRole ,userId,setuserid,login, setLogin, isLoggedIn, setIsLoggedIn, token, setToken}}>
     <div className="App">
       <header className="App-header">
-        <h1>Project 4 </h1>
+      
       </header>
       <Navigation/>
       <Routes>

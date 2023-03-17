@@ -158,6 +158,8 @@ const PatientProfile = () => {
   };
  const createNewAppointment=()=>{
   console.log(newappointment)
+  setDisable(false)
+
   axios
   .post(
     `http://localhost:5000/appointment`,
@@ -170,6 +172,8 @@ const PatientProfile = () => {
   })
   .catch((err) => {
     console.log(err);
+    setAvilable(err.response.data.message);
+    setDisable(true)
   });
 }
  
@@ -185,7 +189,7 @@ console.log(newappointment)
       })
       .then((result) => {
         console.log(result.data);
-        setAvilable(result.data.message);
+        // setAvilable(result.data.message);
 {
   show?setUpdatedValue(
   (current) => {
@@ -377,6 +381,7 @@ console.log(newappointment)
                                                         eventKey="1"
                                                         onClick={(e) => {
                                                           console.log(e.target.attributes.value.value)
+                                                          setDisable(false)
 
                                                           getDoctorsForChoosenClinic(
                                                             e.target.attributes
@@ -426,6 +431,8 @@ console.log(newappointment)
                                                           value={doctor._id}
                                                           eventKey="1"
                                                           onClick={(e) => {
+    setDisable(false)
+
                                                             console.log(
                                                               e.target
                                                                         .attributes
@@ -467,6 +474,8 @@ console.log(newappointment)
                                             <input
                                               type="date"
                                               onChange={(e) => {
+    setDisable(false)
+
                                                 console.log(newappointment);
                                                 setUpdatedValue((current) => {
                                                   return {
@@ -604,6 +613,8 @@ console.log(newappointment)
                                                         value={clinic._id}
                                                         eventKey="1"
                                                         onClick={(e) => {
+          setDisable(false)
+
                                                           console.log(e.target.attributes.value.value)
 
                                                           getDoctorsForChoosenClinic(
@@ -653,6 +664,8 @@ console.log(newappointment)
                                                           value={doctor._id}
                                                           eventKey="1"
                                                           onClick={(e) => {
+          setDisable(false)
+
                                                             console.log(
                                                               e.target
                                                                         .attributes
@@ -695,6 +708,8 @@ console.log(newappointment)
                                             <input
                                               type="date"
                                               onChange={(e) => {
+          setDisable(false)
+
                                                 console.log(newappointment);
                                                 setNewappointment((current) => {
                                                   return {

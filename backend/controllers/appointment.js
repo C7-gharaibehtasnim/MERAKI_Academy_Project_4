@@ -1,6 +1,8 @@
 const appointmentModal = require("../models/appointmentSchema");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+nodemailer = require('nodemailer');
+
 // const accountSid = "ACb2eb670ca1f8af559907cfaf966b4e2d";
 // const authToken = "71b25f32c0bb08550a8de70a1f7753dd";
 // const client = require('twilio')(accountSid, authToken);
@@ -86,7 +88,7 @@ const getAppointmentBydoctorID = (req, res) => {
 
   console.log(req.token.role.role);
   appointmentModal
-    .find({ doctor: id }).populate("patient","firstName lastName -_id")
+    .find({ doctor: id }).populate("patient","email firstName lastName -_id").populate("clinic","sectionname -_id").populate("doctor","firstName lastName -_id").exec()
 
     .then((appointment) => {
   console.log(appointment)
@@ -205,10 +207,41 @@ res.json({
 //    })
 //   .then(message => console.log(message.sid));
 // }
+const cancelationEmail=(req,res)=>{
+const {email,firstName,lastName,clinic,time,date,pfirstName}=req.body
+
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: 'tasnim.gharaibeh@gmail.com',
+    pass: 'xryozjisiylignqh'
+  }
+});
+
+const mailOptions = {
+  from: 'tasnim.gharaibeh@gmail.com',
+  to: email,
+  subject: 'Subject',
+  text: `Dear ${pfirstName} unfortunately your appointment in ${clinic} with Doctor ${firstName}   in ${date} at ${time} is canceld please book another appointment`
+};
+
+transporter.sendMail(mailOptions, function(error, info){
+  if (error) {
+ console.log(error);
+  } else {
+    console.log('Email sent: ' + info.response);
+    res.json({
+      success:true,
+      message:"Email is sent"
+    })
+    // do something useful
+  }
+});
+}
 module.exports = {
   bookAnAppointment,
   getAppointmentBypatientID,
   getAppointmentBydoctorID,
   deleteAppoitment,
-  UpdateAppoitment,checkDate
+  UpdateAppoitment,checkDate,cancelationEmail
 };

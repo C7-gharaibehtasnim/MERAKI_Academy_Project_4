@@ -5,7 +5,8 @@ import { UserContext } from "../App";
 import axios from "axios";
 import Dropdown from "react-bootstrap/Dropdown";
 import Form from "react-bootstrap/Form";
-//import {GoogleLogin} from "react-google-login"
+
+import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
 import {
   MDBBtn,
   MDBContainer,
@@ -19,7 +20,8 @@ import {
 } from "mdb-react-ui-kit";
 
 const Register = () => {
-const clientId="893024847177-2bmi97tmciiqlq0tt5p36sb5dgm134s4.apps.googleusercontent.com"
+  const clientId =
+    "893024847177-2bmi97tmciiqlq0tt5p36sb5dgm134s4.apps.googleusercontent.com";
 
   const Navigate = useNavigate();
   const [radiovalue, setRadioValue] = useState("");
@@ -98,7 +100,7 @@ const clientId="893024847177-2bmi97tmciiqlq0tt5p36sb5dgm134s4.apps.googleusercon
           setToken((current) => {
             return (current = Response.data.token);
           });
-         
+
           setRole((current) => {
             return (current = Response.data.role);
           });
@@ -135,7 +137,7 @@ const clientId="893024847177-2bmi97tmciiqlq0tt5p36sb5dgm134s4.apps.googleusercon
           setToken((current) => {
             return (current = Response.data.token);
           });
-         
+
           setRole((current) => {
             return (current = Response.data.role);
           });
@@ -159,12 +161,12 @@ const clientId="893024847177-2bmi97tmciiqlq0tt5p36sb5dgm134s4.apps.googleusercon
           console.log(err.response);
         });
   };
-  const onSuccess=(res)=>{
-    console.log(res)
-  }
-  const onFailure=(res)=>{
-    console.log(res.profileObj)
-  }
+  const onSuccess = (res) => {
+    console.log(res);
+  };
+  const onFailure = (res) => {
+    console.log(res.profileObj);
+  };
 
   return (
     <MDBContainer fluid>
@@ -333,7 +335,9 @@ const clientId="893024847177-2bmi97tmciiqlq0tt5p36sb5dgm134s4.apps.googleusercon
                 <>
                   <MDBRow>
                     <MDBCol md="6">
-                      <Dropdown style={{fontSize:"20px",paddingTop:"15px"}}>
+                      <Dropdown
+                        style={{ fontSize: "20px", paddingTop: "15px" }}
+                      >
                         <Dropdown.Toggle
                           as={CustomToggle}
                           id="dropdown-custom-components"
@@ -368,16 +372,13 @@ const clientId="893024847177-2bmi97tmciiqlq0tt5p36sb5dgm134s4.apps.googleusercon
                   </MDBRow>
                   <MDBRow>
                     <MDBCol md="6">
-                      <MDBTextArea   onChange={(e) => {
+                      <MDBTextArea
+                        onChange={(e) => {
                           setAddUser((pref) => {
                             return { ...pref, pref: e.target.value };
                           });
-
-                         
-                        }}></MDBTextArea>
-                       
-                        
-                      
+                        }}
+                      ></MDBTextArea>
                     </MDBCol>
                     <MDBCol md="6" className="mb-4"></MDBCol>
                   </MDBRow>
@@ -401,8 +402,10 @@ const clientId="893024847177-2bmi97tmciiqlq0tt5p36sb5dgm134s4.apps.googleusercon
                   </MDBRow>
                   <MDBRow>
                     <MDBCol md="6">
-                      <MDBCardImage style={{"width":"150px","height"
-                    :"150px"}} src={imagesrc} />
+                      <MDBCardImage
+                        style={{ width: "150px", height: "150px" }}
+                        src={imagesrc}
+                      />
                     </MDBCol>
                     <MDBCol md="6" className="mb-4"></MDBCol>
                   </MDBRow>
@@ -434,6 +437,18 @@ const clientId="893024847177-2bmi97tmciiqlq0tt5p36sb5dgm134s4.apps.googleusercon
           </MDBCard>
         </MDBCol>
       </MDBRow>
+      <GoogleOAuthProvider clientId="486610196021-91hvgaljlr1fg6s5e0md4a8re4are57q.apps.googleusercontent.com">
+        <GoogleLogin
+          onSuccess={(credentialResponse) => {
+            console.log(credentialResponse);
+          }}
+          onError={() => {
+            console.log("Login Failed");
+          }}
+        />
+        ;
+      </GoogleOAuthProvider>
+      ;
     </MDBContainer>
   );
 };

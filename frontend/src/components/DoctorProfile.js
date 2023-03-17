@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { DateRangePicker } from 'rsuite';
+import { DateRangePicker } from "rsuite";
 import {
   MDBCol,
   MDBContainer,
@@ -23,13 +23,11 @@ const DoctorProfile = () => {
   const [clinic, setClinic] = useState("");
   const [email, setEmail] = useState("");
   const [appointments, setAppointments] = useState(null);
-  const { token, userId,role,setIsLoggedIn } = useContext(UserContext);
- const [pref, setPref] = useState("")
- const [open, setOpen] = useState(false);
+  const { token, userId, role, setIsLoggedIn } = useContext(UserContext);
+  const [pref, setPref] = useState("");
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
-   
-
     const getinfo = () => {
       axios
         .get(`http://localhost:5000/doctor/${userId}`, {
@@ -40,9 +38,9 @@ const DoctorProfile = () => {
           setFirstName(Response.data.doctor.firstName);
           setLastname(Response.data.doctor.lastName);
           setEmail(Response.data.doctor.email);
-          setImage(Response.data.doctor.image)
-          setClinic(Response.data.doctor.clinic.sectionname)
-        setPref(Response.data.doctor.pref)
+          setImage(Response.data.doctor.image);
+          setClinic(Response.data.doctor.clinic.sectionname);
+          setPref(Response.data.doctor.pref);
         })
         .catch((err) => {
           console.log(err);
@@ -66,15 +64,41 @@ const DoctorProfile = () => {
     getappointment();
   }, []);
   const deleteAppointment = (id) => {
+    const resultApp = appointments.filter((appointment) => {
+      return appointment._id == id;
+    });
     axios
       .delete(`http://localhost:5000/appointment/delete/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       })
-      .then((Response) => {
-        const result = appointments.filter(
-          (appointment) => appointment._id != id
+      .then(async (Response) => {
+        console.log(Response.data);
+        console.log(id);
+        // const resultApp = appointments.filter(
+        //   (appointment) =>
+        //   { return appointment._id == id}
+        // );
+
+        // //cons
+
+        const emailSent = await axios.post(
+          "http://localhost:5000/appointment/cancelemail",
+          {
+            email: resultApp[0].patient.email,
+            firstName: resultApp[0].doctor.firstName,
+            lastname: resultApp[0].doctor.lastName,
+            clinic: resultApp[0].clinic.sectionname,
+            time: resultApp[0].time,
+            date: resultApp[0].date,
+            pfirstName: firstName,
+          }
         );
-        // //console.log(result);
+        console.log(emailSent.data);
+        const result = appointments.filter((appointment) => {
+          return appointment._id != id;
+        });
+        console.log(resultApp);
+        console.log("hipepole", result);
         setAppointments(result);
         // setDEleteResult((current) => {
         //   current = Response.data.message;
@@ -85,6 +109,7 @@ const DoctorProfile = () => {
         // //console.log(articles);
       })
       .catch((err) => {
+        console.log(err);
         //setDEleteResult((current) => {
         //current = err.response.data.message;
       });
@@ -112,30 +137,28 @@ const DoctorProfile = () => {
                     fluid
                   />
                   <MDBTypography tag="h5">
-                    {firstName +"  "+lastname}
-                    
+                    {firstName + "  " + lastname}
                   </MDBTypography>
                   <MDBCardText>{clinic}</MDBCardText>
                   <MDBCardText>{pref}</MDBCardText>
                   <MDBIcon far icon="edit mb-5" />
                   <MDBCol size="6" className="mb-3">
-                  <MDBRow className="pt-1">
-                        <MDBTypography tag="h6">{email}</MDBTypography>
-                        <MDBCardText className="text-muted">
-                          {email}
-                        </MDBCardText>
-                        </MDBRow>
-                      </MDBCol>
+                    <MDBRow className="pt-1">
+                      <MDBTypography tag="h6">{email}</MDBTypography>
+                      <MDBCardText className="text-muted">{email}</MDBCardText>
+                    </MDBRow>
+                  </MDBCol>
                 </MDBCol>
-                  <MDBCardBody className="p-4">
-                    <MDBTypography  onClick={() => setOpen(!open)} tag="h6">MY Appointments</MDBTypography>
-                    <hr className="mt-0 mb-4" />
-              
-                  
+                <MDBCardBody className="p-4">
+                  <MDBTypography onClick={() => setOpen(!open)} tag="h6">
+                    MY Appointments
+                  </MDBTypography>
+                  <hr className="mt-0 mb-4" />
+
                   <MDBRow className="pt-1">
                     <MDBCol size="15" className="mb-3">
-{                    console.log(appointments)}
-                     
+                      {console.log(appointments)}
+
                       {appointments &&
                         appointments.map((Element) => {
                           return (
@@ -198,15 +221,16 @@ const DoctorProfile = () => {
                                                   <MDBBtn
                                                     outline
                                                     className="me-1 flex-grow-1"
-                                                    onClick={()=>{deleteAppointment(Element._id)}}
+                                                    onClick={() => {
+                                                      deleteAppointment(
+                                                        Element._id
+                                                      );
+                                                    }}
                                                   >
                                                     delete
                                                   </MDBBtn>
-                                                 
                                                 </div>
                                               </div>
-                                              
-                  
                                             </div>
                                           </MDBCardBody>
                                         </MDBCard>
@@ -220,8 +244,7 @@ const DoctorProfile = () => {
                         })}
                     </MDBCol>
                   </MDBRow>
-                 
-                  
+
                   <MDBTypography tag="h6"> Reports</MDBTypography>
                   <hr className="mt-0 mb-4" />
                   <MDBRow className="pt-1">

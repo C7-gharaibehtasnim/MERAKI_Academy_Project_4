@@ -31,7 +31,7 @@ const Login = () => {
     axios
       .post("http://localhost:5000/roles/login", login)
       .then((Response) => {
-        //console.log(Response.data.role);
+        console.log(Response.data.role);
 
         setIsLoggedIn((current) => {
           return !current;
@@ -60,9 +60,10 @@ const Login = () => {
         if (Response.data.role === "admin") {
           Navigate("/admin");
         }
-        //console.log(Response.data);
+        console.log(Response.data);
       })
       .catch((err) => {
+        console.log(err)
         setLoginError(err.response.data.message);
       });
   };
