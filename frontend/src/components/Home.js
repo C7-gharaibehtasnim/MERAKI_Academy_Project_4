@@ -14,7 +14,11 @@ import { UserContext } from "../App";
 import axios from "axios";
 import GoogleMapReact from 'google-map-react';
 import {Loader, LoaderOptions} from 'google-maps';
-
+// import {Map, InfoWindow, Marker, GoogleApiWrapper} from 'google-maps-react';
+// import SimpleMap from "./SimpleMap";
+// import OwlCarousel from 'react-owl-carousel';
+// import 'owl.carousel/dist/assets/owl.carousel.css';
+// import 'owl.carousel/dist/assets/owl.theme.default.css';
 
 const Home = () => {
   const Navigate = useNavigate();
@@ -49,6 +53,7 @@ const Home = () => {
   };
   return (
     <>
+   
       <div className="container">
         <div className="pannerimg">
           {" "}
@@ -160,14 +165,33 @@ const Home = () => {
 
 
 
-       
-         
-
-            
+      
         </div>
       </div>
+      <div style={{border:"red solid"}} className="location">
+        <h4 style={{marginLeft:"50%",fontSize:"40px",color:"gray",marginBottom:"30px"}}>Hospital location</h4>
+
+        <div className="line"/>
+        <>
+   <div style={{marginLeft:"60%"}}> <h3>Our 
+branches:</h3>
+<hr style={{width:"50%",}}></hr>
+<h5>-Irbid</h5>
+<br></br>
+<h5>-Amman</h5>
+<br></br>
+<h5>-azzarqa</h5></div>
+ <img style={{width:"30%",marginTop:"-200px"}} src ="https://a.storyblok.com/f/117609/2028x1242/eb3996dc4a/integrating-google-maps-react.png"/>
+ </>
+</div>
+<div className="footer">
+  
+  
+  </div>
     </>
+
+ 
   );
 };
 
-export default Home;
+ export default Home;

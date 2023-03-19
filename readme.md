@@ -1,10 +1,10 @@
 <p align="center">
-<a href="https://www.meraki-academy.org" target="_blank" rel="noopener noreferrer">
+<a href="https://us.123rf.com/450wm/mantinov/mantinov2004/mantinov200400007/143789285-help-for-health-icon-logo-vector-graphic-design-helping-hands-inside-medical-cross-sign.jpg?ver=6" target="_blank" rel="noopener noreferrer">
  <img width="400px" height="100px" src="https://www.meraki-academy.org/assets/img/logov02.svg" alt="Project logo">
  </a>
 </p>
 
-<h3 align="center">Project Title
+<h3 align="center">
 </h3>
 
 ---
@@ -27,9 +27,11 @@
 
 ## 🧐 About <a name = "about"></a>
 
-Write about 1-2 paragraphs describing the purpose of your project.
+Hospital care system dealing with patient appointment and by checking date and time available on doctor calender and the patient can update his appoiontment and cancle it 
 
-Ex. Are you looking for a quick and easy way to action, action, and action? The **(name of application)** is the greatest and most accurate application to do this for you. It helps you to **(list of activities)**. The **(name of application)** provides a simple design to ensure having the best user experience.
+Hospital car can  deal also  with cancelation of appointment by sending a notification to the patient on his gmail account 
+
+
 
 ## 🏁 Getting Started <a name = "getting_started"></a>
 
@@ -37,17 +39,17 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Prerequisites
 
-- Visual Studio Code follow this <a href=''>link</a> to install.
-- Git Bash follow this <a href=''>link</a> to install.
-- MongoDB follow this <a href=''>link</a> to install.
-- Node.js follow this <a href=''>link</a> to install.
+- Visual Studio Code follow this <a href='https://code.visualstudio.com/download'>link</a> to install.
+- Git Bash follow this <a href='https://git-scm.com/download/win'>link</a> to install.
+- MongoDB follow this <a href='https://www.mongodb.com/try/download/community'>link</a> to install.
+- Node.js follow this <a href='https://nodejs.org/en/download'>link</a> to install.
 
 ### Installing:
 
-1. Clone the repo to your local machine using git bash.
+1. git clone https://github.com/C7-gharaibehtasnim/MERAKI_Academy_Project_4.
 
 ```
-git clone https://github.com/your_username_/Project-Name.git
+
 ```
 
 2. Install packeges repeat this step in backend and frontend folder
@@ -90,11 +92,11 @@ Ex.
 ## User Story <a name = "#user_story"></a>
 
 Your trello board link
-<a href=''>Trello</a>
+<a href='https://trello.com/b/z4dMWlqH/hospital-management-system'>Trello</a>
 
 ## Data Flow <a name = "#data_flow"></a>
 
-<img width=200px height=200px src="https://cacoo.com/assets/site/img/templates/screenshots/er-database-diagram.png" alt="Diagram"></a>
+<img width=200px height=200px src="https://trello.com/c/5bXI9qNq/7-schema" alt="Diagram"></a>
 
 ## ⚠️ Guided By <a name = "guided_by"></a>
 

@@ -14,6 +14,7 @@ import {
   MDBDropdownMenu,
   MDBDropdownItem,
   MDBCollapse,
+  MDBCardImage,
 } from "mdb-react-ui-kit";
 import {  useNavigate } from "react-router-dom";
 
@@ -32,45 +33,15 @@ const Navigation = () => {
   } = useContext(UserContext);
   console.log(isLoggedIn);
   const [showBasic, setShowBasic] = useState(false);
-  // const [searchItem, setSearchItem] = useState();
-  // const search = () => {
-  //   axios
-  //     .get(`http://localhost:5000/doctor/search/result?search=${searchItem}`)
 
-  //     .then((Response) => {
-  //       console.log(Response.data);
-  //       setSeatchResult(Response.data.doctor);
-  //       //setClinics(Response.data.clinic)
-  //       Navigate("/search");
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //     });
-  // };
   return (
-    <MDBNavbar expand="lg" light bgColor="light">
+    <MDBNavbar style={{fontFamily:"revert" ,fontSize:"20px"}} expand="lg" light bgColor="light">
       <MDBContainer fluid>
-        <MDBNavbarBrand href="#">Care Hospital</MDBNavbarBrand>
-        {/* <form className="d-flex input-group w-auto">
-          <input
-            type="search"
-            className="form-control"
-            placeholder="Find A Doctor"
-            aria-label="Search"
-            onChange={(e) => {
-              setSearchItem(e.target.value);
-            }}
-          />
-          <MDBBtn
-            onClick={(e) => {
-              e.preventDefault();search();
-             
-            }}
-            color="primary"
-          >
-            Search
-          </MDBBtn>
-        </form> */}
+      <MDBCardImage style={{width:"6%","marginLeft":"20px"}} src="        https://us.123rf.com/450wm/mantinov/mantinov2004/mantinov200400007/143789285-help-for-health-icon-logo-vector-graphic-design-helping-hands-inside-medical-cross-sign.jpg?ver=6
+"/>
+
+        <MDBNavbarBrand href="/">Care Hospital</MDBNavbarBrand>
+    
         <MDBNavbarToggler
           aria-controls="navbarSupportedContent"
           aria-expanded="false"
@@ -81,9 +52,9 @@ const Navigation = () => {
         </MDBNavbarToggler>
 
         <MDBCollapse navbar show={showBasic}>
-          <MDBNavbarNav className="mr-auto mb-2 mb-lg-0">
-            <MDBNavbarItem>
-              <MDBNavbarLink active aria-current="page" href="/">
+          <MDBNavbarNav  className="mr-auto mb-2 mb-lg-0" >
+            <MDBNavbarItem >
+              <MDBNavbarLink className="home" active aria-current="page" href="/">
                 Home
               </MDBNavbarLink>
             </MDBNavbarItem>
@@ -100,7 +71,7 @@ const Navigation = () => {
             {role == "patient" && isLoggedIn == true ? (
               <>
                 <MDBNavbarItem>
-                  <MDBNavbarLink href="/patient">My profile</MDBNavbarLink>
+                  <MDBNavbarLink className="register" href="/patient">My profile</MDBNavbarLink>
                 </MDBNavbarItem>
                 <MDBNavbarItem>
                 <MDBBtn onClick={()=>{
@@ -120,7 +91,7 @@ const Navigation = () => {
             {role == "doctor" && isLoggedIn == true ? (
               <>
                 <MDBNavbarItem>
-                  <MDBNavbarLink href="/doctor">My profile</MDBNavbarLink>
+                  <MDBNavbarLink className="register" href="/doctor">My profile</MDBNavbarLink>
                 </MDBNavbarItem>
                 <MDBNavbarItem>
                 <MDBBtn onClick={()=>{
@@ -138,7 +109,7 @@ const Navigation = () => {
             )}
             {isLoggedIn==false && <>
               <MDBNavbarItem>
-                  <MDBNavbarLink href="/register">register</MDBNavbarLink>
+                  <MDBNavbarLink className="register" href="/register">register</MDBNavbarLink>
                 </MDBNavbarItem>
                 <MDBNavbarItem>
                 <MDBNavbarItem>
